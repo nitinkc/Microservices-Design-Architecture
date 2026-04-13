@@ -177,6 +177,37 @@ graph TD
 
 ---
 
+## Markdown List Rendering Rule
+
+**Always add a blank line between a text/paragraph and the list that follows it.**
+
+MkDocs (and most Markdown renderers) require a blank line before a list to render it correctly as a `<ul>` or `<ol>`. Without it, the list items render inline as plain text.
+
+❌ **Wrong — no blank line before list:**
+```markdown
+**Best practices:**
+- Use structured logging
+- Include correlation IDs
+- Never log secrets
+```
+
+✅ **Correct — blank line before list:**
+```markdown
+**Best practices:**
+
+- Use structured logging
+- Include correlation IDs
+- Never log secrets
+```
+
+This applies everywhere:
+- After a **bold label** like `**Benefits:**`, `**When used:**`, `**Best for:**`
+- After a sentence or paragraph that introduces a list
+- After a `>` blockquote that introduces a list
+- Does NOT apply inside code blocks or YAML
+
+---
+
 ## Mermaid Diagram Rules
 
 1. **NEVER use `|` inside node labels** `[ ]` — it breaks the mermaid parser. Use `·` (middle dot U+00B7) instead: `[Partition 0 · Partition 1]`
