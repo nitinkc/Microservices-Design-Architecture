@@ -128,4 +128,4 @@ extra_javascript:
 
 extra_css:
   - https://unpkg.com/mermaid@10/dist/mermaid.css
-#  - css/custom.css
+  - css/myCss.css
