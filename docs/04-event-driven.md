@@ -15,6 +15,8 @@
 
 > **Key distinction:** An event is a *fact* (past tense, already happened). A command is a *request* (may succeed or fail).
 
+
+
 ---
 
 ## Event-Driven Patterns
@@ -27,6 +29,8 @@
 | **CQRS via Events** | Write side emits events; read side builds projections | High read/write ratio; independent scaling |
 
 ---
+
+
 
 ## Kafka Architecture
 
@@ -56,6 +60,8 @@ graph LR
 
 ### Delivery Guarantees
 
+
+
 | Guarantee | Description | Use When |
 |-----------|-------------|---------|
 | **At most once** | May lose messages; no duplicates | Metrics, non-critical logs |
@@ -63,6 +69,8 @@ graph LR
 | **Exactly once** | No loss, no duplicates; idempotent producer + transactions | Financial, inventory |
 
 ---
+
+
 
 ## CQRS — Command Query Responsibility Segregation
 
@@ -86,6 +94,10 @@ graph LR
 
 ---
 
+
+
+
+
 ## Event Sourcing
 
 | Concept | Description |
@@ -97,6 +109,8 @@ graph LR
 | **Event Versioning** | Handle schema evolution; old events must still be readable (upcasting) |
 
 **When to use:** Audit trails required, complex state machines, time-travel debugging, regulatory compliance.
+
+
 
 **When NOT to use:** Simple CRUD, team unfamiliar with the pattern, no audit requirement — the complexity cost is real.
 
@@ -139,6 +153,8 @@ graph TD
 
 ### Compensating Transactions
 
+
+
 | Step | Forward Action | Compensating Action |
 |------|---------------|---------------------|
 | 1 | Reserve inventory | Release reservation |
@@ -149,11 +165,17 @@ graph TD
 
 ## Outbox Pattern — Guaranteed Event Publishing
 
+
+
 **Problem:** Writing to the DB and publishing to Kafka are two separate operations. Either can fail independently.
 
 **Solution:**
+
 1. Write business data **and** an outbox record in the **same database transaction**
 2. A separate Outbox Poller or CDC tool (Debezium) reads pending records
 3. Publishes to Kafka; marks record as published
 
 This guarantees **at-least-once** delivery without distributed transactions.
+
+
+

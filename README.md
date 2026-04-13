@@ -104,19 +104,19 @@ architectureStyle/
 ├── requirements.txt        ← Python dependencies
 ├── README.md               ← This file
 ├── docs/
-│   ├── index.md            ← Home page
-│   ├── 01-foundations/     ← Architectural Foundations
-│   ├── 02-ddd/             ← Domain-Driven Design
-│   ├── 03-microservices-patterns/
-│   ├── 04-event-driven/
-│   ├── 05-api-communication/
-│   ├── 06-resilience/
-│   ├── 07-observability/
-│   ├── 08-security/
-│   ├── 09-deployment/
-│   ├── 10-interview/       ← Interview Prep Q&A
-│   └── js/                 ← Mermaid diagram initialization
-└── site/                   ← Generated static site (build output)
+│   ├── index.md                    ← Home page
+│   ├── 01-foundations.md           ← Architectural Foundations
+│   ├── 02-ddd.md                   ← Domain-Driven Design
+│   ├── 03-microservices-patterns.md
+│   ├── 04-event-driven.md
+│   ├── 05-api-communication.md
+│   ├── 06-resilience.md
+│   ├── 07-observability.md
+│   ├── 08-security.md
+│   ├── 09-deployment.md
+│   ├── 10-interview.md             ← Interview Prep Q&A
+│   └── js/                         ← Mermaid diagram initialization
+└── site/                           ← Generated static site (build output)
 ```
 
 ---

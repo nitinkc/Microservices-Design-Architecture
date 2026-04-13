@@ -8,21 +8,21 @@ This is an MkDocs documentation site covering microservices and architectural pa
 
 ```
 architectureStyle/
-├── mkdocs.yml                              ← Site config and nav
-├── requirements.txt                        ← Python deps (mkdocs + pymdown)
+├── mkdocs.yml                          ← Site config and nav
+├── requirements.txt                    ← Python deps (mkdocs + pymdown)
 ├── docs/
-│   ├── index.md                            ← Master overview + learning path
-│   ├── js/mermaid-init.js                  ← Mermaid JS renderer
-│   ├── 01-foundations/index.md             ← Architecture styles, CAP, Conway's Law
-│   ├── 02-ddd/index.md                     ← Strategic + Tactical DDD
-│   ├── 03-microservices-patterns/index.md  ← Decomposition, Integration, Sidecar, Outbox
-│   ├── 04-event-driven/index.md            ← Kafka, CQRS, Event Sourcing, Saga
-│   ├── 05-api-communication/index.md       ← REST, gRPC, GraphQL, Gateway, BFF, Mesh
-│   ├── 06-resilience/index.md              ← Circuit Breaker, Retry, Bulkhead, Throttle
-│   ├── 07-observability/index.md           ← Logs, Metrics, Traces, SLO, OTel
-│   ├── 08-security/index.md                ← OAuth2, JWT, mTLS, Secrets, Zero Trust
-│   ├── 09-deployment/index.md              ← K8s, Helm, GitOps, Strategies, 12-Factor
-│   └── 10-interview/index.md               ← Q&A, Trade-offs, ADRs, Spring Boot map
+│   ├── index.md                        ← Master overview + learning path
+│   ├── js/mermaid-init.js              ← Mermaid JS renderer
+│   ├── 01-foundations.md               ← Architecture styles, CAP, Conway's Law
+│   ├── 02-ddd.md                       ← Strategic + Tactical DDD
+│   ├── 03-microservices-patterns.md    ← Decomposition, Integration, Sidecar, Outbox
+│   ├── 04-event-driven.md              ← Kafka, CQRS, Event Sourcing, Saga
+│   ├── 05-api-communication.md         ← REST, gRPC, GraphQL, Gateway, BFF, Mesh
+│   ├── 06-resilience.md                ← Circuit Breaker, Retry, Bulkhead, Throttle
+│   ├── 07-observability.md             ← Logs, Metrics, Traces, SLO, OTel
+│   ├── 08-security.md                  ← OAuth2, JWT, mTLS, Secrets, Zero Trust
+│   ├── 09-deployment.md                ← K8s, Helm, GitOps, Strategies, 12-Factor
+│   └── 10-interview.md                 ← Q&A, Trade-offs, ADRs, Spring Boot map
 ```
 
 ---
@@ -30,17 +30,18 @@ architectureStyle/
 ## How to Add or Expand Content
 
 ### Add a new top-level section
-1. Create `docs/NN-section-name/index.md`
+1. Create `docs/NN-section-name.md`
 2. Add an entry to `nav:` in `mkdocs.yml`
 3. Follow the content style guide below
 
-### Add a sub-page within an existing section
-1. Create `docs/NN-section/page-name.md`
-2. Update `nav:` in `mkdocs.yml`:
+### Add a sub-article within an existing section
+When a topic grows large enough to split, use a numbered sub-file pattern:
+1. Create `docs/NN-section-name.md` for the main article (e.g. `04-event-driven.md`)
+2. Create `docs/04.01-topic-name.md` for the sub-article (e.g. `04.01-kafka-deep-dive.md`)
+3. Update `nav:` in `mkdocs.yml`:
 ```yaml
-- "02 · Domain-Driven Design":
-  - 02-ddd/index.md
-  - "Context Mapping Deep Dive": 02-ddd/context-mapping.md
+- "04 · Event-Driven Architecture": 04-event-driven.md
+- "04.01 · Kafka Deep Dive": 04.01-kafka-deep-dive.md
 ```
 
 ### Add a Mermaid diagram
@@ -112,7 +113,7 @@ python3 -m mkdocs build
 
 ## Adding Interview Questions
 
-In `docs/10-interview/index.md`, append to the Q&A section:
+In `docs/10-interview.md`, append to the Q&A section:
 
 ```markdown
 ??? question "What is X?"
@@ -121,7 +122,7 @@ In `docs/10-interview/index.md`, append to the Q&A section:
 
 ## Adding Spring Boot Mappings
 
-In the Spring Boot mapping table in `docs/10-interview/index.md`:
+In the Spring Boot mapping table in `docs/10-interview.md`:
 
 ```markdown
 | Concept Name | Spring Boot library or module |
@@ -129,7 +130,7 @@ In the Spring Boot mapping table in `docs/10-interview/index.md`:
 
 ## Adding a Trade-off Entry
 
-In the trade-off table in `docs/10-interview/index.md`:
+In the trade-off table in `docs/10-interview.md`:
 
 ```markdown
 | **X vs Y** | When to pick X | When to pick Y |

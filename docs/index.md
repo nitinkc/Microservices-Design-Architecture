@@ -26,16 +26,16 @@ graph LR
 
 | # | Section | Core Topics |
 |---|---------|-------------|
-| [01](01-foundations/index.md) | Architectural Foundations | Styles, CAP, Conway's Law, Hexagonal, Onion, Clean |
-| [02](02-ddd/index.md) | Domain-Driven Design | Bounded Contexts, Aggregates, Context Mapping, Ubiquitous Language |
-| [03](03-microservices-patterns/index.md) | Microservices Patterns | Decomposition, Integration, Sidecar, Outbox, Strangler Fig |
-| [04](04-event-driven/index.md) | Event-Driven Architecture | Kafka, CQRS, Event Sourcing, Saga, DLQ |
-| [05](05-api-communication/index.md) | API & Communication | REST, gRPC, GraphQL, API Gateway, BFF, Service Mesh |
-| [06](06-resilience/index.md) | Resilience & Reliability | Circuit Breaker, Retry, Bulkhead, Timeout, Rate Limiting |
-| [07](07-observability/index.md) | Observability | Logs, Metrics, Traces, SLO, OpenTelemetry |
-| [08](08-security/index.md) | Security | OAuth2, JWT, mTLS, Secrets Management, Zero Trust |
-| [09](09-deployment/index.md) | Deployment & Infrastructure | Kubernetes, Helm, GitOps, Blue-Green, Canary |
-| [10](10-interview/index.md) | Interview Prep | Design scenarios, Trade-offs, ADRs, Spring Boot map |
+| [01](01-foundations.md) | Architectural Foundations | Styles, CAP, Conway's Law, Hexagonal, Onion, Clean |
+| [02](02-ddd.md) | Domain-Driven Design | Bounded Contexts, Aggregates, Context Mapping, Ubiquitous Language |
+| [03](03-microservices-patterns.md) | Microservices Patterns | Decomposition, Integration, Sidecar, Outbox, Strangler Fig |
+| [04](04-event-driven.md) | Event-Driven Architecture | Kafka, CQRS, Event Sourcing, Saga, DLQ |
+| [05](05-api-communication.md) | API & Communication | REST, gRPC, GraphQL, API Gateway, BFF, Service Mesh |
+| [06](06-resilience.md) | Resilience & Reliability | Circuit Breaker, Retry, Bulkhead, Timeout, Rate Limiting |
+| [07](07-observability.md) | Observability | Logs, Metrics, Traces, SLO, OpenTelemetry |
+| [08](08-security.md) | Security | OAuth2, JWT, mTLS, Secrets Management, Zero Trust |
+| [09](09-deployment.md) | Deployment & Infrastructure | Kubernetes, Helm, GitOps, Blue-Green, Canary |
+| [10](10-interview.md) | Interview Prep | Design scenarios, Trade-offs, ADRs, Spring Boot map |
 
 ---
 
