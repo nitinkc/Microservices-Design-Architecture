@@ -29,17 +29,79 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Design & Patterns:
-    - "01 · Architectural Foundations": 01-foundations.md
-    - "02 · Domain-Driven Design": 02-ddd.md
-    - "03 · Microservices Patterns": 03-microservices-patterns.md
-    - "04 · Event-Driven Architecture": 04-event-driven.md
+    - "01 · Architectural Foundations":
+      - "Summary": 01-foundations.md
+      - "Architecture Styles": 01.01-architecture-styles.md
+      - "App Architecture Patterns": 01.02-app-architecture-patterns.md
+      - "CAP Theorem": 01.03-cap-theorem.md
+      - "ACID vs BASE": 01.04-acid-vs-base.md
+      - "Conway's Law": 01.05-conways-law.md
+      - "Core Design Principles": 01.06-core-design-principles.md
+    - "02 · Domain-Driven Design":
+      - "Summary": 02-ddd.md
+      - "Strategic DDD": 02.01-strategic-ddd.md
+      - "Context Mapping": 02.02-context-mapping.md
+      - "Tactical Building Blocks": 02.03-tactical-building-blocks.md
+      - "Aggregate Design": 02.04-aggregate-design.md
+      - "DDD-Microservices Alignment": 02.05-ddd-microservices-alignment.md
+    - "03 · Microservices Patterns":
+      - "Summary": 03-microservices-patterns.md
+      - "Decomposition Patterns": 03.01-decomposition-patterns.md
+      - "Integration Patterns": 03.02-integration-patterns.md
+      - "Data Management Patterns": 03.03-data-management-patterns.md
+      - "Saga and Outbox": 03.04-saga-and-outbox.md
+      - "Sidecar Patterns": 03.05-sidecar-patterns.md
+    - "04 · Event-Driven Architecture":
+      - "Summary": 04-event-driven.md
+      - "Event Types and Patterns": 04.01-event-types-and-patterns.md
+      - "Kafka Deep Dive": 04.02-kafka-deep-dive.md
+      - "CQRS": 04.03-cqrs.md
+      - "Event Sourcing": 04.04-event-sourcing.md
+      - "Saga Pattern": 04.05-saga-pattern.md
+      - "Outbox Pattern": 04.06-outbox-pattern.md
   - Integration & Runtime:
-    - "05 · API & Communication": 05-api-communication.md
-    - "06 · Resilience & Reliability": 06-resilience.md
-    - "07 · Observability": 07-observability.md
+    - "05 · API & Communication":
+      - "Summary": 05-api-communication.md
+      - "REST Deep Dive": 05.01-rest-deep-dive.md
+      - "gRPC": 05.02-grpc.md
+      - "GraphQL": 05.03-graphql.md
+      - "API Gateway": 05.04-api-gateway.md
+      - "BFF Pattern": 05.05-bff-pattern.md
+      - "Service Mesh": 05.06-service-mesh.md
+    - "06 · Resilience & Reliability":
+      - "Summary": 06-resilience.md
+      - "Circuit Breaker": 06.01-circuit-breaker.md
+      - "Retry Pattern": 06.02-retry-pattern.md
+      - "Bulkhead Pattern": 06.03-bulkhead-pattern.md
+      - "Timeout Pattern": 06.04-timeout-pattern.md
+      - "Rate Limiting": 06.05-rate-limiting.md
+      - "Fallback and Idempotency": 06.06-fallback-and-idempotency.md
+      - "Chaos Engineering": 06.07-chaos-engineering.md
+    - "07 · Observability":
+      - "Summary": 07-observability.md
+      - "Logging": 07.01-logging.md
+      - "Metrics": 07.02-metrics.md
+      - "Distributed Tracing": 07.03-distributed-tracing.md
+      - "SLI, SLO, SLA": 07.04-sli-slo-sla.md
+      - "OpenTelemetry": 07.05-opentelemetry.md
   - Operations & Security:
-    - "08 · Security": 08-security.md
-    - "09 · Deployment & Infrastructure": 09-deployment.md
+    - "08 · Security":
+      - "Summary": 08-security.md
+      - "OAuth2 & OIDC": 08.01-oauth2-and-oidc.md
+      - "JWT Deep Dive": 08.02-jwt-deep-dive.md
+      - "Service-to-Service Auth": 08.03-service-to-service-auth.md
+      - "API Security Patterns": 08.04-api-security-patterns.md
+      - "Secrets Management": 08.05-secrets-management.md
+      - "Zero Trust": 08.06-zero-trust.md
+    - "09 · Deployment & Infrastructure":
+      - "Summary": 09-deployment.md
+      - "Containers and Docker": 09.01-containers-and-docker.md
+      - "Kubernetes Core": 09.02-kubernetes-core.md
+      - "Deployment Strategies": 09.03-deployment-strategies.md
+      - "Helm": 09.04-helm.md
+      - "GitOps": 09.05-gitops.md
+      - "Service Mesh Istio": 09.06-service-mesh-istio.md
+      - "12-Factor and IaC": 09.07-twelve-factor-and-iac.md
   - Resources:
     - "10 · Interview Prep": 10-interview.md
 

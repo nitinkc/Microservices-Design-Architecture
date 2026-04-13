@@ -21,6 +21,8 @@
 | **Idempotency**         | GET, PUT, DELETE are idempotent; POST is not                                                      |
 | **Status codes**        | 2xx success · 3xx redirect · 4xx client error · 5xx server error                                  |
 
+→ **[Deep Dive: REST](05.01-rest-deep-dive.md)** — Richardson Maturity, HATEOAS, versioning, idempotency
+
 ### API Versioning Strategies
 
 | Strategy                | Example                               | Pros / Cons                  |
@@ -40,6 +42,8 @@
 | **Use case**         | Internal service-to-service; high throughput; polyglot environments                 |
 | **Trade-offs**       | Less debuggable than REST; browsers need grpc-web proxy; requires schema management |
 
+→ **[Deep Dive: gRPC](05.02-grpc.md)** — Protocol Buffers, HTTP/2, streaming types, when to use
+
 
 ## GraphQL
 
@@ -51,6 +55,8 @@
 | **DataLoader**      | Batching and caching solution for N+1; groups queries into one                |
 | **Introspection**   | Schema is self-documenting; disable in production                             |
 | **Use case**        | Complex frontends with varied clients; BFF replacement; rapidly evolving APIs |
+
+→ **[Deep Dive: GraphQL](05.03-graphql.md)** — Schema, N+1 problem, DataLoader, when GraphQL beats REST
 
 ## API Gateway
 
@@ -79,6 +85,8 @@ graph TD
 
 **Tools:** Kong, AWS API Gateway, Spring Cloud Gateway, Nginx, Envoy, Traefik
 
+→ **[Deep Dive: API Gateway](05.04-api-gateway.md)** — Routing, auth, rate limiting, aggregation patterns
+
 ## Backend for Frontend (BFF)
 
 **Problem:** One generic API cannot optimally serve mobile, web, and partner clients simultaneously.
@@ -103,6 +111,8 @@ graph TD
 | Reduces over-fetching / under-fetching | Logic duplication if not careful  |
 | Teams own their BFF end-to-end         | Coordination when backend changes |
 
+→ **[Deep Dive: BFF Pattern](05.05-bff-pattern.md)** — Per-client backends, ownership models, trade-offs
+
 ## Service Mesh
 
 | Component              | Description                                                          |
@@ -115,6 +125,8 @@ graph TD
 | **Observability**      | Automatic metrics, distributed traces, access logs — no code changes |
 
 **When to use:** Mature microservices with many services needing consistent security, observability, and traffic management. Overhead not worth it for < 5 services.
+
+→ **[Deep Dive: Service Mesh](05.06-service-mesh.md)** — Istio, Envoy, mTLS, traffic management
 
 ## Sync vs Async — Decision Guide
 

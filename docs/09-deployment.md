@@ -13,6 +13,8 @@
 
 **Dockerfile best practices:** non-root user, minimal base image (distroless/alpine), no secrets in layers, multi-stage builds, pin versions.
 
+→ **[Deep Dive: Containers and Docker](09.01-containers-and-docker.md)** — Dockerfile best practices, multi-stage builds, image security
+
 ## Kubernetes Core Concepts
 
 ```mermaid
@@ -44,6 +46,8 @@ graph TD
 | **RBAC**          | Role-based access control for the Kubernetes API; least privilege                 |
 | **NetworkPolicy** | Firewall rules for pod-to-pod communication (east-west traffic control)           |
 
+→ **[Deep Dive: Kubernetes Core](09.02-kubernetes-core.md)** — Pods, Deployments, Services, ConfigMaps, Secrets, RBAC, HPA
+
 ## Deployment Strategies
 
 
@@ -63,6 +67,8 @@ graph LR
     LB -->|10 percent| GREEN[Green - v2 canary]
 ```
 
+→ **[Deep Dive: Deployment Strategies](09.03-deployment-strategies.md)** — Rolling, Blue-Green, Canary, Feature Flags
+
 ## Helm
 
 | Concept                | Description                                           |
@@ -72,6 +78,8 @@ graph LR
 | **Release**            | A deployed instance of a chart in a cluster           |
 | **Repository**         | Chart storage; Artifact Hub, AWS ECR, OCI registries  |
 | **Upgrade / Rollback** | `helm upgrade` / `helm rollback <release> <revision>` |
+
+→ **[Deep Dive: Helm](09.04-helm.md)** — Charts, values, releases, environment overrides
 
 ## GitOps
 
@@ -83,6 +91,8 @@ graph LR
 | **ArgoCD**              | Kubernetes-native GitOps; UI, sync policies, RBAC, drift detection                    |
 | **Flux**                | Lightweight GitOps toolkit; Helm and Kustomize support; CNCF graduated                |
 
+→ **[Deep Dive: GitOps](09.05-gitops.md)** — Pull vs Push, ArgoCD, Flux, image update automation
+
 ## Service Mesh — Istio Key Concepts
 
 | Component               | Role                                                                       |
@@ -93,6 +103,8 @@ graph LR
 | **DestinationRule**     | Load balancing algorithm, circuit breaking, connection pool settings       |
 | **PeerAuthentication**  | Enforce STRICT mTLS between all services in a namespace                    |
 | **AuthorizationPolicy** | L7 access control; allow/deny by service account, namespace, HTTP method   |
+
+→ **[Deep Dive: Service Mesh with Istio](09.06-service-mesh-istio.md)** — Envoy, Istiod, VirtualService, mTLS
 
 ## The 12-Factor App
 
@@ -110,6 +122,8 @@ graph LR
 | 10. **Dev/Prod parity**      | Keep all environments as similar as possible                        |
 | 11. **Logs**                 | Treat as event streams; write to stdout; aggregator handles routing |
 | 12. **Admin processes**      | Run as one-off processes in the same environment                    |
+
+→ **[Deep Dive: 12-Factor App and IaC](09.07-twelve-factor-and-iac.md)** — 12-Factor principles, Terraform, Pulumi
 
 ## CI/CD Pipeline Stages
 

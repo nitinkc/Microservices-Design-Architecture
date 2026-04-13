@@ -24,6 +24,7 @@ graph LR
 | **Serverless / FaaS** | Event-triggered functions, no infra management           | Bursty, event-driven, cost-sensitive workloads     |
 | **Event-Driven**      | Events as first-class citizens, async by default         | Loose coupling at scale, workflows, integrations   |
 
+→ **[Deep Dive: Architecture Styles](01.01-architecture-styles.md)** — Monolith to microservices evolution, when to choose each
 
 ## Application Architecture Patterns
 
@@ -49,6 +50,8 @@ graph TD
 !!! tip "Onion vs Hexagonal vs Clean"
     These are the same idea with different vocabulary. The key: domain logic has zero dependency on frameworks, databases, or HTTP. All dependencies point inward.
 
+→ **[Deep Dive: Application Architecture Patterns](01.02-app-architecture-patterns.md)** — Hexagonal, Onion, Clean Architecture, Pipe and Filter
+
 ---
 
 ## Key Architecture Principles
@@ -68,6 +71,8 @@ A distributed system can guarantee only **2 of 3**:
 | Strong consistency; may reject requests during partition | Always respond; may return stale data            |
 | Banking, inventory, payment                              | Social feeds, product recommendations, analytics |
 | PostgreSQL, HBase, Zookeeper                             | Cassandra, CouchDB, DynamoDB (eventual mode)     |
+
+→ **[Deep Dive: CAP Theorem](01.03-cap-theorem.md)** — CP vs AP trade-offs, PACELC, consistency tuning
 
 ---
 
@@ -90,6 +95,8 @@ A distributed system can guarantee only **2 of 3**:
 | **Consistency** | Strong (immediate)                            | Eventual                                               |
 | **Trade-off**   | Slower; less scalable                         | Faster; complex application logic                      |
 
+→ **[Deep Dive: ACID vs BASE](01.04-acid-vs-base.md)** — Transaction models, isolation levels, eventual consistency patterns
+
 ---
 
 ### Conway's Law
@@ -99,6 +106,8 @@ A distributed system can guarantee only **2 of 3**:
 - Siloed teams → tightly coupled services
 - **Inverse Conway Maneuver:** intentionally structure teams to get the architecture you want
 - **Team Topologies** (Skelton & Pais): Stream-aligned, Platform, Enabling, Complicated-subsystem teams
+
+→ **[Deep Dive: Conway's Law](01.05-conways-law.md)** — Inverse Conway Maneuver, Team Topologies, aligning org and architecture
 
 ---
 
@@ -114,3 +123,5 @@ A distributed system can guarantee only **2 of 3**:
 | **Immutable Infrastructure** | Don't patch production — replace it                |
 | **Everything as Code**       | Infra, config, pipelines — versioned in Git        |
 | **Separation of Concerns**   | Each layer/service has one job                     |
+
+→ **[Deep Dive: Core Design Principles](01.06-core-design-principles.md)** — Coupling, cohesion, fail fast, immutable infrastructure

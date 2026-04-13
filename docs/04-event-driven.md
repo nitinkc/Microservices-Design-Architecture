@@ -13,6 +13,8 @@
 
 > **Key distinction:** An event is a *fact* (past tense, already happened). A command is a *request* (may succeed or fail).
 
+→ **[Deep Dive: Event Types and Patterns](04.01-event-types-and-patterns.md)** — Domain vs integration events, event-carried state transfer
+
 ## Event-Driven Patterns
 
 | Pattern                          | Description                                             | When to Use                                |
@@ -49,6 +51,8 @@ graph LR
 | **Schema Registry**         | Central schema store (Avro, Protobuf, JSON Schema); prevents schema breakage                   |
 | **Dead Letter Queue (DLQ)** | Separate topic for poison-pill messages after max retries exhausted                            |
 
+→ **[Deep Dive: Kafka](04.02-kafka-deep-dive.md)** — Partitions, consumer groups, delivery guarantees, Schema Registry
+
 ### Delivery Guarantees
 
 | Guarantee         | Description                                                | Use When                   |
@@ -77,6 +81,8 @@ graph LR
 - Read and write models scale independently
 - Cost: two models to design and maintain; eventual consistency between sides
 
+→ **[Deep Dive: CQRS](04.03-cqrs.md)** — Command vs query separation, projections, read model strategies
+
 
 ## Event Sourcing
 
@@ -91,6 +97,8 @@ graph LR
 **When to use:** Audit trails required, complex state machines, time-travel debugging, regulatory compliance.
 
 **When NOT to use:** Simple CRUD, team unfamiliar with the pattern, no audit requirement — the complexity cost is real.
+
+→ **[Deep Dive: Event Sourcing](04.04-event-sourcing.md)** — Event stores, snapshots, projections, schema versioning
 
 
 ## Saga Pattern — Distributed Transactions Without 2PC
@@ -136,6 +144,8 @@ graph TD
 | 2     | Charge payment    | Issue refund         |
 | 3     | Create shipment   | Cancel shipment      |
 
+→ **[Deep Dive: Saga Pattern](04.05-saga-pattern.md)** — Choreography vs orchestration, compensating transactions, Temporal.io
+
 ## Outbox Pattern — Guaranteed Event Publishing
 
 **Problem:** Writing to the DB and publishing to Kafka are two separate operations. Either can fail independently.
@@ -147,3 +157,5 @@ graph TD
 3. Publishes to Kafka; marks record as published
 
 This guarantees **at-least-once** delivery without distributed transactions.
+
+→ **[Deep Dive: Outbox Pattern](04.06-outbox-pattern.md)** — Atomic publish, Debezium CDC, handling duplicates

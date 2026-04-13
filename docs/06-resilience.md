@@ -43,19 +43,23 @@ stateDiagram-v2
 - **Libraries:** Resilience4j (Spring Boot), Polly (.NET); Hystrix is deprecated
 - **Key insight:** Circuit breaker *prevents* cascading failure; retry *recovers* from transient failure
 
+→ **[Deep Dive: Circuit Breaker](06.01-circuit-breaker.md)** — States, thresholds, Resilience4j configuration, fallbacks
+
 ---
 
 ## Retry Pattern
 
-| Concept | Description |
-|---------|-------------|
-| **Exponential backoff** | Wait time doubles on each retry: 1s, 2s, 4s, 8s... |
-| **Jitter** | Add random variance to backoff — prevents thundering herd when all clients retry simultaneously |
-| **Max retries** | Always cap retries; uncapped = infinite load on a struggling service |
-| **Idempotency required** | Only retry operations that are safe to repeat without side effects |
-| **Retryable errors** | 503, 429, connection timeout — NOT 4xx client errors |
+| Concept                  | Description                                                                                     |
+|:-------------------------|:------------------------------------------------------------------------------------------------|
+| **Exponential backoff**  | Wait time doubles on each retry: 1s, 2s, 4s, 8s...                                              |
+| **Jitter**               | Add random variance to backoff — prevents thundering herd when all clients retry simultaneously |
+| **Max retries**          | Always cap retries; uncapped = infinite load on a struggling service                            |
+| **Idempotency required** | Only retry operations that are safe to repeat without side effects                              |
+| **Retryable errors**     | 503, 429, connection timeout — NOT 4xx client errors                                            |
 
 > **Thundering herd:** All clients retry simultaneously after a failure, causing a traffic spike that re-causes the failure. Jitter solves this.
+
+→ **[Deep Dive: Retry Pattern](06.02-retry-pattern.md)** — Exponential backoff, jitter, idempotency requirements
 
 ---
 
@@ -63,40 +67,46 @@ stateDiagram-v2
 
 > Isolate resources so a failure in one area cannot exhaust the entire system.
 
-| Type | Implementation |
-|------|---------------|
-| **Thread pool isolation** | Separate thread pool per downstream dependency; one slow service can't starve all others |
-| **Connection pool isolation** | Separate DB/HTTP connection pool per consumer group |
-| **Process isolation** | Separate deployments for critical vs non-critical paths (pricing can't kill checkout) |
+| Type                          | Implementation                                                                           |
+|:------------------------------|:-----------------------------------------------------------------------------------------|
+| **Thread pool isolation**     | Separate thread pool per downstream dependency; one slow service can't starve all others |
+| **Connection pool isolation** | Separate DB/HTTP connection pool per consumer group                                      |
+| **Process isolation**         | Separate deployments for critical vs non-critical paths (pricing can't kill checkout)    |
 
 Named after the watertight compartments in a ship hull.
+
+→ **[Deep Dive: Bulkhead Pattern](06.03-bulkhead-pattern.md)** — Thread pool isolation, connection pool isolation, sizing
 
 ---
 
 ## Timeout Pattern
 
-| Type | Description |
-|------|-------------|
-| **Connect timeout** | Max time to establish a TCP connection |
-| **Read timeout** | Max time to receive a complete response |
-| **Write timeout** | Max time to send a request body |
+| Type                     | Description                                                                                      |
+|:-------------------------|:-------------------------------------------------------------------------------------------------|
+| **Connect timeout**      | Max time to establish a TCP connection                                                           |
+| **Read timeout**         | Max time to receive a complete response                                                          |
+| **Write timeout**        | Max time to send a request body                                                                  |
 | **Deadline propagation** | Pass remaining timeout budget through service call chains (`grpc-timeout`, `X-Request-Deadline`) |
 
 > Always set timeouts. An unconfigured timeout = each thread waiting indefinitely = thread pool exhaustion = service outage.
+
+→ **[Deep Dive: Timeout Pattern](06.04-timeout-pattern.md)** — Connect/read/write timeouts, deadline propagation
 
 ---
 
 ## Rate Limiting & Throttling
 
-| Algorithm | How It Works | Properties |
-|-----------|-------------|-----------|
-| **Token Bucket** | Tokens refill at fixed rate; consume one per request; burst allowed up to bucket size | Smooth average; allows bursts |
-| **Sliding Window** | Count requests in rolling time window | Precise; more memory |
-| **Fixed Window** | Count resets at fixed interval | Simple; allows burst at boundary |
-| **Leaky Bucket** | Requests queued and processed at fixed rate | Smoothest output; no burst |
+| Algorithm          | How It Works                                                                          | Properties                       |
+|:-------------------|:--------------------------------------------------------------------------------------|:---------------------------------|
+| **Token Bucket**   | Tokens refill at fixed rate; consume one per request; burst allowed up to bucket size | Smooth average; allows bursts    |
+| **Sliding Window** | Count requests in rolling time window                                                 | Precise; more memory             |
+| **Fixed Window**   | Count resets at fixed interval                                                        | Simple; allows burst at boundary |
+| **Leaky Bucket**   | Requests queued and processed at fixed rate                                           | Smoothest output; no burst       |
 
 - Response: **429 Too Many Requests**
 - Response headers: `Retry-After`, `X-RateLimit-Limit`, `X-RateLimit-Remaining`
+
+→ **[Deep Dive: Rate Limiting](06.05-rate-limiting.md)** — Token bucket, sliding window, distributed rate limiting
 
 ---
 
@@ -119,6 +129,8 @@ Named after the watertight compartments in a ship hull.
 | **Idempotency key** | Client generates unique UUID per request; server stores it and deduplicates |
 | **HTTP verbs** | GET, PUT, DELETE are idempotent by specification; POST is not |
 | **Why it matters** | Enables safe retries in at-least-once messaging; prevents duplicate charges |
+
+→ **[Deep Dive: Fallback and Idempotency](06.06-fallback-and-idempotency.md)** — Fallback strategies, idempotency keys, graceful degradation
 
 ---
 
@@ -152,3 +164,5 @@ Named after the watertight compartments in a ship hull.
 | **Fault types** | Kill pods, add network latency, drop packets, exhaust resources |
 | **Tools** | Netflix Chaos Monkey, Chaos Toolkit, AWS Fault Injection Simulator, Litmus (K8s) |
 | **Goal** | Verify resilience claims before incidents do it for you |
+
+→ **[Deep Dive: Chaos Engineering](06.07-chaos-engineering.md)** — GameDays, fault injection, Chaos Mesh, blast radius control

@@ -39,6 +39,8 @@ graph TD
 App → Logstash / Fluentd / Fluent Bit → Elasticsearch ← Kibana (visualize + alert)
 ```
 
+→ **[Deep Dive: Logging](07.01-logging.md)** — Structured logging, correlation IDs, ELK stack, log levels
+
 ---
 
 ## Metrics
@@ -65,6 +67,8 @@ App → Logstash / Fluentd / Fluent Bit → Elasticsearch ← Kibana (visualize 
 | **U** — Utilization | How busy is the resource (%) |
 | **S** — Saturation | How much work is queued / waiting |
 | **E** — Errors | Errors on the resource |
+
+→ **[Deep Dive: Metrics](07.02-metrics.md)** — Counter/Gauge/Histogram, RED and USE methods, Prometheus
 
 ---
 
@@ -93,6 +97,8 @@ sequenceDiagram
 | **Head-based sampling** | Decide to trace at request entry; consistent but may miss errors |
 | **Tail-based sampling** | Decide *after* seeing full trace; captures errors; more complex |
 
+→ **[Deep Dive: Distributed Tracing](07.03-distributed-tracing.md)** — Spans, context propagation, sampling strategies
+
 ---
 
 ## SLI · SLO · SLA · Error Budget
@@ -105,6 +111,8 @@ sequenceDiagram
 | **Error Budget** | `100% - SLO target` | 0.1% = ~43.8 min/month allowed downtime |
 
 > Error budgets drive decisions: if the budget is burning fast, freeze feature deployments and focus on reliability.
+
+→ **[Deep Dive: SLI, SLO, SLA](07.04-sli-slo-sla.md)** — Error budgets, burn rate alerting, SRE approach
 
 ---
 
@@ -138,3 +146,5 @@ sequenceDiagram
 | **Collector** | Receives, processes, and exports telemetry |
 | **Exporters** | Send to Jaeger, Zipkin, Prometheus, Datadog, etc. |
 | **Spring Boot support** | `spring-boot-starter-actuator` + Micrometer + OTel integration |
+
+→ **[Deep Dive: OpenTelemetry](07.05-opentelemetry.md)** — SDK, Collector, auto-instrumentation, Spring Boot integration

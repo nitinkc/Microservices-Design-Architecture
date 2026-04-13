@@ -50,6 +50,8 @@ sequenceDiagram
 | **Refresh Token** | Long (days to weeks)     | Get a new access token without re-login |
 | **ID Token**      | Short                    | OIDC only; contains user claims         |
 
+→ **[Deep Dive: OAuth2 & OIDC](08.01-oauth2-and-oidc.md)** — Grant types, PKCE flow, SAML vs OAuth2 vs OIDC, common mistakes
+
 ## JWT (JSON Web Token)
 
 Structure: `Header.Payload.Signature`
@@ -71,6 +73,8 @@ Structure: `Header.Payload.Signature`
 !!! warning "JWT is NOT encrypted by default"
     JWT payload is Base64 encoded — anyone can decode it. Never put secrets, passwords, or sensitive PII in JWT claims. Use **JWE** (JSON Web Encryption) if you need encrypted tokens.
 
+→ **[Deep Dive: JWT](08.02-jwt-deep-dive.md)** — RS256 vs HS256, JWKS rotation, token storage, security vulnerabilities
+
 ## Service-to-Service Security
 
 | Pattern                         | Description                                                                 |
@@ -81,6 +85,8 @@ Structure: `Header.Payload.Signature`
 | **Short-lived tokens**          | Prefer ephemeral credentials; minimize blast radius of a leak               |
 
 Service Mesh (Istio) can automate mTLS between all services with zero code changes.
+
+→ **[Deep Dive: Service-to-Service Auth](08.03-service-to-service-auth.md)** — mTLS, SPIFFE/SPIRE, K8s SA tokens, OAuth2 Client Credentials
 
 ## API Security Checklist
 
@@ -94,6 +100,8 @@ Service Mesh (Istio) can automate mTLS between all services with zero code chang
 | **Sensitive data**   | Mask PII in logs; encrypt at rest; minimize data returned (no over-fetching)   |
 | **Error messages**   | Never expose stack traces or internal details to clients                       |
 
+→ **[Deep Dive: API Security Patterns](08.04-api-security-patterns.md)** — CORS, rate limiting strategies, OWASP Top 10 detail, security headers
+
 ## Secrets Management
 
 | Tool                          | Description                                                                     |
@@ -104,10 +112,13 @@ Service Mesh (Istio) can automate mTLS between all services with zero code chang
 | **External Secrets Operator** | Sync secrets from Vault / AWS SM / GCP SM into K8s Secrets automatically        |
 
 **Golden rules:**
+
 - Never hardcode secrets in source code or Dockerfiles
 - Never commit secrets to Git (use `.gitignore`; tools like `git-secrets`)
 - Rotate credentials regularly and always on suspected breach
 - Use least-privilege credentials — each service gets only what it needs
+
+→ **[Deep Dive: Secrets Management](08.05-secrets-management.md)** — Vault dynamic secrets, K8s secret hardening, AWS SM rotation, anti-patterns
 
 ## Zero Trust Architecture
 
@@ -117,6 +128,8 @@ Service Mesh (Istio) can automate mTLS between all services with zero code chang
 | **Assume breach**              | Design as if attackers are already inside; minimize lateral movement   |
 | **Least privilege**            | Grant minimum permissions needed for the task                          |
 | **Micro-segmentation**         | K8s NetworkPolicies restricting east-west traffic between services     |
+
+→ **[Deep Dive: Zero Trust](08.06-zero-trust.md)** — Five pillars, OPA policy as code, maturity model, K8s micro-segmentation
 
 ## OWASP API Security Top 10 — Key Ones
 
@@ -129,3 +142,5 @@ Service Mesh (Istio) can automate mTLS between all services with zero code chang
 | 5  | **Broken Function Level Authorization**      | Regular user calling admin endpoints                     |
 | 7  | **Server-Side Request Forgery (SSRF)**       | Attacker tricks server into making internal requests     |
 | 8  | **Security Misconfiguration**                | Default creds, open CORS, debug endpoints in production  |
+
+

@@ -120,3 +120,13 @@ graph TD
 
 !!! note "The common mistake"
     Decomposing by technical layer (UserController, UserService, UserRepo as separate services) instead of by business capability. DDD prevents this.
+
+→ **[Deep Dive: Strategic DDD](02.01-strategic-ddd.md)** — Bounded contexts, ubiquitous language, subdomains in depth
+
+→ **[Deep Dive: Context Mapping](02.02-context-mapping.md)** — ACL, Shared Kernel, Customer-Supplier relationships
+
+→ **[Deep Dive: Tactical Building Blocks](02.03-tactical-building-blocks.md)** — Entities, Value Objects, Domain Events, Repositories
+
+→ **[Deep Dive: Aggregate Design](02.04-aggregate-design.md)** — Invariants, sizing aggregates, cross-aggregate consistency
+
+→ **[Deep Dive: DDD and Microservices Alignment](02.05-ddd-microservices-alignment.md)** — Mapping DDD to service boundaries

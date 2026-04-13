@@ -26,6 +26,8 @@ graph TD
 | **Strangler Fig** | Gradually replace monolith — new services absorb functionality over time via a facade | Safe monolith migration; no big-bang rewrite |
 | **Branch by Abstraction** | Introduce abstraction layer over existing code, swap implementation behind it | Large in-place refactoring |
 
+→ **[Deep Dive: Decomposition Patterns](03.01-decomposition-patterns.md)** — Strangler Fig, business capability vs subdomain decomposition
+
 ```mermaid
 graph LR
     Client --> Facade[Strangler Fig Facade]
@@ -46,6 +48,8 @@ graph LR
 | **Anti-Corruption Layer** | Translate between your domain model and an external/legacy model |
 | **Gateway Aggregation** | Gateway fans out to multiple services and merges responses |
 | **Gateway Offloading** | Push cross-cutting concerns (auth, logging, rate limiting) to the gateway layer |
+
+→ **[Deep Dive: Integration Patterns](03.02-integration-patterns.md)** — API Gateway, BFF, Service Discovery, Gateway Aggregation
 
 ---
 
@@ -79,6 +83,10 @@ sequenceDiagram
 
 Tools: **Debezium** (CDC-based), **Spring Modulith** outbox support, Transactional Outbox libraries.
 
+→ **[Deep Dive: Data Management Patterns](03.03-data-management-patterns.md)** — Database per Service, API Composition, CQRS
+
+→ **[Deep Dive: Saga and Outbox Patterns](03.04-saga-and-outbox.md)** — Choreography vs orchestration, CDC, Debezium
+
 ---
 
 ## Structural / Sidecar Patterns
@@ -99,6 +107,8 @@ graph LR
     Monitor[Prometheus] --> SC
 ```
 
+→ **[Deep Dive: Sidecar Patterns](03.05-sidecar-patterns.md)** — Sidecar, Ambassador, Adapter, Init Container
+
 ---
 
 ## Communication Patterns
@@ -113,12 +123,3 @@ graph LR
 
 ---
 
-## Design Checklist
-
-- [ ] Service boundaries aligned with bounded contexts (DDD)?
-- [ ] Each service owns its own database (no shared schema)?
-- [ ] Cross-service transactions managed via Saga?
-- [ ] Event publication guaranteed via Outbox pattern?
-- [ ] Cross-cutting concerns offloaded to API Gateway / Service Mesh?
-- [ ] Service communication hardened with circuit breaker + retry?
-- [ ] Shared libraries avoided or strictly versioned?
