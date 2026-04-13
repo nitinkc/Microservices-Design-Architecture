@@ -148,3 +148,21 @@ sequenceDiagram
 | **Spring Boot support** | `spring-boot-starter-actuator` + Micrometer + OTel integration |
 
 → **[Deep Dive: OpenTelemetry](07.05-opentelemetry.md)** — SDK, Collector, auto-instrumentation, Spring Boot integration
+
+---
+
+## DORA Metrics
+
+DevOps Research and Assessment (DORA) measures software delivery performance:
+
+| Metric | Measures | Target |
+|:-------|:---------|:--------|
+| **Deployment Frequency** | How often code reaches production | 3+ per day (elite) |
+| **Lead Time for Changes** | Code commit → production | < 1 hour (elite) |
+| **Change Failure Rate** | % of deployments causing incidents | 0–15% (elite) |
+| **Mean Time to Recovery** | Time to restore service after incident | < 1 hour (elite) |
+
+Elite performers ship 3+ times per day with low defect rates and recover from incidents in under an hour.
+
+→ **[Deep Dive: DORA Metrics](07.06-dora-metrics.md)** — Deployment frequency, lead time, change failure rate, MTTR measurement and improvement
+

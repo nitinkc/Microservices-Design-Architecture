@@ -137,3 +137,35 @@ graph TD
 | **Temporal coupling**   | Required                         | Not required                               |
 | **Throughput**          | Bounded by slowest service       | High; consumers scale independently        |
 | **Example**             | User login, payment confirmation | Order processing, notifications, analytics |
+
+---
+
+## API Versioning & Evolution
+
+As APIs change, clients depend on old contracts. Versioning lets you evolve APIs without breaking clients.
+
+| Strategy | Example | Pros | Cons |
+|:---------|:--------|:-----|:-----|
+| **Backward Compatibility** | Add optional fields; never remove | No versioning overhead | Limited flexibility |
+| **URL Path Versioning** | `/api/v1/` vs `/api/v2/` | Explicit; easy to route | Duplication; operational overhead |
+| **Deprecation Headers** | `Deprecation: true`, `Sunset: Date` | Standards-based; gives clients notice | Clients must read headers |
+
+**Best practice:** Default to backward compatibility (add optional fields). Only version when you must break clients.
+
+→ **[Deep Dive: API Versioning & Evolution](05.07-api-versioning-and-evolution.md)** — Backward-compatible changes, deprecation strategies, multi-version support, monitoring version usage
+
+---
+
+## Configuration Management
+
+Configuration (DB URLs, API keys, feature flags) must be separate from code.
+
+| Aspect | Best Practice |
+|:-------|:--------------|
+| **Secrets** | External secrets manager (AWS Secrets Manager, Vault); never in Git |
+| **Non-secret config** | Environment variables or Spring Cloud Config Server |
+| **Feature flags** | External service (LaunchDarkly, Split.io) for gradual rollout |
+| **Environment-specific** | Profiles: application.yml, application-prod.yml, application-dev.yml |
+
+→ **[Deep Dive: Configuration Management](09.08-configuration-management.md)** — Spring Cloud Config, environment profiles, secrets managers, feature flags
+

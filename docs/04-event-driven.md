@@ -159,3 +159,21 @@ graph TD
 This guarantees **at-least-once** delivery without distributed transactions.
 
 → **[Deep Dive: Outbox Pattern](04.06-outbox-pattern.md)** — Atomic publish, Debezium CDC, handling duplicates
+
+---
+
+## Messaging Patterns
+
+Building reliable event-driven systems requires handling ordering, duplicates, and failures.
+
+| Pattern | Problem Solved |
+|---------|----------------|
+| **Partition Key Ordering** | Ensure related messages process in order using partition key |
+| **Idempotency Key** | Detect and skip duplicate messages; prevent side effects of retries |
+| **Dead Letter Queue** | Route poison messages (failures) to separate topic for manual review |
+| **Consumer Groups** | Distribute partitions across multiple consumers; horizontal scaling |
+| **Batch Processing** | Accumulate messages; process in bulk (efficient but higher latency) |
+| **Stream Processing** | Process every message immediately (lower latency; less throughput) |
+
+→ **[Deep Dive: Messaging Patterns](04.07-messaging-patterns.md)** — Message ordering, idempotency, DLQ, at-least-once delivery, deduplication
+

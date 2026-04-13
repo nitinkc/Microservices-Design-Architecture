@@ -60,6 +60,8 @@ nav:
       - "Data Management Patterns": 03.03-data-management-patterns.md
       - "Saga and Outbox": 03.04-saga-and-outbox.md
       - "Sidecar Patterns": 03.05-sidecar-patterns.md
+      - "Service Discovery & Load Balancing": 03.06-service-discovery-and-load-balancing.md
+      - "Cache Patterns": 03.07-cache-patterns.md
     - "04 · Event-Driven Architecture":
       - "Summary": 04-event-driven.md
       - "Event Types and Patterns": 04.01-event-types-and-patterns.md
@@ -68,6 +70,7 @@ nav:
       - "Event Sourcing": 04.04-event-sourcing.md
       - "Saga Pattern": 04.05-saga-pattern.md
       - "Outbox Pattern": 04.06-outbox-pattern.md
+      - "Messaging Patterns": 04.07-messaging-patterns.md
   - Integration & Runtime:
     - "05 · API & Communication":
       - "Summary": 05-api-communication.md
@@ -77,6 +80,7 @@ nav:
       - "API Gateway": 05.04-api-gateway.md
       - "BFF Pattern": 05.05-bff-pattern.md
       - "Service Mesh": 05.06-service-mesh.md
+      - "API Versioning & Evolution": 05.07-api-versioning-and-evolution.md
     - "06 · Resilience & Reliability":
       - "Summary": 06-resilience.md
       - "Circuit Breaker": 06.01-circuit-breaker.md
@@ -93,6 +97,7 @@ nav:
       - "Distributed Tracing": 07.03-distributed-tracing.md
       - "SLI, SLO, SLA": 07.04-sli-slo-sla.md
       - "OpenTelemetry": 07.05-opentelemetry.md
+      - "DORA Metrics": 07.06-dora-metrics.md
   - Operations & Security:
     - "08 · Security":
       - "Summary": 08-security.md
@@ -102,6 +107,7 @@ nav:
       - "API Security Patterns": 08.04-api-security-patterns.md
       - "Secrets Management": 08.05-secrets-management.md
       - "Zero Trust": 08.06-zero-trust.md
+      - "Testing Strategies": 08.07-testing-strategies.md
     - "09 · Deployment & Infrastructure":
       - "Summary": 09-deployment.md
       - "Containers and Docker": 09.01-containers-and-docker.md
@@ -111,6 +117,7 @@ nav:
       - "GitOps": 09.05-gitops.md
       - "Service Mesh Istio": 09.06-service-mesh-istio.md
       - "12-Factor and IaC": 09.07-twelve-factor-and-iac.md
+      - "Configuration Management": 09.08-configuration-management.md
   - Resources:
     - "10 · Interview Prep": 10-interview.md
 

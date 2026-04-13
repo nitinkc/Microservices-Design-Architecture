@@ -111,6 +111,38 @@ graph LR
 
 ---
 
+## Service Discovery & Load Balancing
+
+When services scale to multiple instances, clients need to find them dynamically.
+
+| Pattern | Description | When to Use |
+|---------|-------------|-----------|
+| **Kubernetes DNS** | CoreDNS; zero code changes; transparent | Kubernetes environments (easiest) |
+| **Client-Side Discovery** | Client queries registry (Eureka); picks instance | Non-K8s; custom load balancing logic |
+| **Server-Side Discovery** | Load balancer queries registry; routes transparently | Separation of concerns |
+| **Service Mesh** | Sidecar proxy handles discovery + routing + observability | Large scale; language diversity |
+
+→ **[Deep Dive: Service Discovery & Load Balancing](03.06-service-discovery-and-load-balancing.md)** — Kubernetes DNS, Eureka, Consul, Service Mesh, load balancing algorithms
+
+---
+
+## Cache Patterns
+
+Cache frequently accessed data to reduce database load and latency.
+
+| Pattern | Behavior | Use Case |
+|---------|----------|----------|
+| **Cache-Aside** | Check cache → miss → load from DB → store in cache | Read-heavy; app controls what to cache |
+| **Write-Through** | Write to cache AND DB together | Strong consistency required |
+| **Write-Behind** | Write to cache immediately; async flush to DB | High-write; non-critical data; analytics |
+| **Distributed Cache** | Multi-node cache (Redis Cluster); sharded data | Horizontal scale; shared cache across services |
+
+**Cache Invalidation:** TTL-based (automatic expiry), Event-based (explicit invalidation), Versioning (cache key versioning).
+
+→ **[Deep Dive: Cache Patterns & Strategies](03.07-cache-patterns.md)** — Cache-aside, Write-through, Write-behind, Cache stampede, Redis sharding, Database sharding
+
+---
+
 ## Communication Patterns
 
 | Style | Examples | Trade-off |

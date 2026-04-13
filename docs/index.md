@@ -28,13 +28,13 @@ graph LR
 |---|---------|-------------|
 | [01](01-foundations.md) | Architectural Foundations | Styles, CAP, Conway's Law, Hexagonal, Onion, Clean |
 | [02](02-ddd.md) | Domain-Driven Design | Bounded Contexts, Aggregates, Context Mapping, Ubiquitous Language |
-| [03](03-microservices-patterns.md) | Microservices Patterns | Decomposition, Integration, Sidecar, Outbox, Strangler Fig |
-| [04](04-event-driven.md) | Event-Driven Architecture | Kafka, CQRS, Event Sourcing, Saga, DLQ |
-| [05](05-api-communication.md) | API & Communication | REST, gRPC, GraphQL, API Gateway, BFF, Service Mesh |
-| [06](06-resilience.md) | Resilience & Reliability | Circuit Breaker, Retry, Bulkhead, Timeout, Rate Limiting |
-| [07](07-observability.md) | Observability | Logs, Metrics, Traces, SLO, OpenTelemetry |
-| [08](08-security.md) | Security | OAuth2, JWT, mTLS, Secrets Management, Zero Trust |
-| [09](09-deployment.md) | Deployment & Infrastructure | Kubernetes, Helm, GitOps, Blue-Green, Canary |
+| [03](03-microservices-patterns.md) | Microservices Patterns | Decomposition, Integration, Service Discovery, Caching, Sidecar, Outbox |
+| [04](04-event-driven.md) | Event-Driven Architecture | Kafka, CQRS, Event Sourcing, Saga, Messaging Patterns, DLQ |
+| [05](05-api-communication.md) | API & Communication | REST, gRPC, GraphQL, API Gateway, BFF, Versioning, Configuration |
+| [06](06-resilience.md) | Resilience & Reliability | Circuit Breaker, Retry, Bulkhead, Timeout, Rate Limiting, Chaos |
+| [07](07-observability.md) | Observability | Logs, Metrics, Traces, SLO, OpenTelemetry, DORA Metrics |
+| [08](08-security.md) | Security | OAuth2, JWT, mTLS, Secrets, Zero Trust, Testing Strategies |
+| [09](09-deployment.md) | Deployment & Infrastructure | Kubernetes, Helm, GitOps, Blue-Green, Canary, Configuration |
 | [10](10-interview.md) | Interview Prep | Design scenarios, Trade-offs, ADRs, Spring Boot map |
 
 ---

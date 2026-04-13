@@ -21,11 +21,11 @@ A systematic breadth-first guide to microservices design, patterns, and deployme
 2. **Create a virtual environment**
    ```bash
    python3 -m venv .venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
    ```
 
 3. **Install dependencies**
    ```bash
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
    pip install -r requirements.txt
    ```
 
