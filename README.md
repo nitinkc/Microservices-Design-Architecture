@@ -7,8 +7,8 @@ A systematic breadth-first guide to microservices design, patterns, and deployme
 
 1. **Clone the repository**
    ```bash
-   git clone (https://github.com/nitinkc/Microservices-Design-Architecture.git)
-   cd architectureStyle
+   git clone https://github.com/nitinkc/Microservices-Design-Architecture.git
+   cd Microservices-Design-Architecture
    ```
 
 2. **Create a virtual environment**
