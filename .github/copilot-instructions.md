@@ -237,6 +237,117 @@ python3 -m mkdocs build
 
 ---
 
+## Adding Abbreviations & Tooltips
+
+The site uses **hover tooltips** for technical terms — when readers hover over a dotted-underlined term, a popup shows its definition. This is powered by the `abbr` Markdown extension + a custom JavaScript tooltip engine.
+
+### How It Works
+
+1. **`docs/_abbreviations.md`** — Shared glossary file containing all term definitions
+2. **`docs/js/tooltips.js`** — JavaScript that renders floating tooltips on hover (works inside tables!)
+3. **Any page** can include abbreviations by adding one line at the bottom: `--8<-- "_abbreviations.md"`
+
+### Adding a New Abbreviation — Step by Step
+
+#### Step 1: Add the definition to `docs/_abbreviations.md`
+
+Open `docs/_abbreviations.md` and add your term in the relevant section (or create a new comment section if needed):
+
+```markdown
+<!-- Your section category -->
+*[Your Term]: Your definition here — 1–2 lines, concise and clear.
+*[alternate form]: Same definition if the term appears in lowercase or different format.
+```
+
+**Example — adding "Replication":**
+```markdown
+<!-- Data consistency -->
+*[Replication]: Copying data from one node to another; basis for fault tolerance and read scaling.
+*[replication]: Copying data from one node to another; basis for fault tolerance and read scaling.
+```
+
+**Rules:**
+- **One definition per term** — the JavaScript will display it on every match
+- **Add case variants** if the term appears as both "CAP" and "cap" or "Vector Clocks" and "Vector clocks" (the extension is case-sensitive)
+- **Keep definitions 1–2 lines max** — concise over verbose
+- **Include key context** — "what it is" + "why it matters"
+- **Use categories** with HTML comments to organize: `<!-- CAP / Consistency models -->`, `<!-- Common systems -->`, etc.
+
+#### Step 2: Include abbreviations on your page
+
+At the **very end** of your markdown file (after all content, after interview Q&As), add:
+
+```markdown
+--8<-- "_abbreviations.md"
+```
+
+This line tells MkDocs to include all abbreviations from that shared file. The `abbr` extension will automatically wrap every matching term with `<abbr title="...">` tags.
+
+#### Step 3: Rebuild and test
+
+Run the dev server:
+```bash
+source .venv/bin/activate
+python3 -m mkdocs serve
+```
+
+Then open the page at `http://127.0.0.1:8000/` and look for **dotted-underlined terms**. Hover over one — you should see a dark tooltip bubble appear above the term with its definition.
+
+### Adding Abbreviations to a New Page — Full Example
+
+Say you're writing `docs/11-patterns.md` and want to add tooltips for terms like **Saga**, **Idempotent**, **Compensation**.
+
+**In `docs/11-patterns.md`, add to `_abbreviations.md` first:**
+
+```markdown
+<!-- In _abbreviations.md, find or create a section for your terms -->
+*[Saga]: Long-running distributed transaction split into compensatable steps.
+*[Idempotent]: Operation that produces the same result no matter how many times it runs.
+*[Compensation]: Rollback operation that reverses a previously completed transaction step.
+*[idempotent]: Operation that produces the same result no matter how many times it runs.
+```
+
+**In `docs/11-patterns.md`, at the bottom:**
+
+```markdown
+## Patterns and Trade-offs
+
+...content about sagas, idempotency, compensation...
+
+--8<-- "_abbreviations.md"
+```
+
+Now every occurrence of "**Saga**", "**Idempotent**", "**idempotent**", and "**Compensation**" will have tooltips.
+
+### Visual Styling
+
+- **Dotted underline** (✓ visible, shows term is hoverable)
+- **`cursor: help`** icon on hover
+- **Dark tooltip bubble** (position: fixed, follows cursor, auto-flips at screen edges)
+- **Works inside tables** — the JavaScript appends the tooltip to `<body>`, so it's never clipped by `overflow: hidden`
+
+### Glossary Table (Optional)
+
+Many pages include a **Glossary** section at the bottom before the abbreviations include:
+
+```markdown
+## Glossary
+
+Key terms used on this page — hover over any **underlined** term throughout the article to see its definition inline.
+
+| Term | Definition |
+|:-----|:-----------|
+| **Saga** | Long-running distributed transaction split into compensatable steps. |
+| **Idempotent** | Operation that produces the same result no matter how many times it runs. |
+| **Compensation** | Rollback operation that reverses a previously completed transaction step. |
+
+--8<-- "_abbreviations.md"
+```
+
+This gives readers both a **reference table** at the bottom and **inline tooltips** throughout the page.
+
+---
+
 ## Adding Interview Questions
 
 In `docs/10-interview.md`, append to the Q&A section:
