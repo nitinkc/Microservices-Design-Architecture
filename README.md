@@ -2,6 +2,7 @@
 
 A systematic breadth-first guide to microservices design, patterns, and deployment for architects.
 
+[https://nitinkc.github.io/Microservices-Design-Architecture/](https://nitinkc.github.io/Microservices-Design-Architecture/)
 ---
 
 ## Quick Start
