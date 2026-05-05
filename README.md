@@ -2,8 +2,7 @@
 
 A systematic breadth-first guide to microservices design, patterns, and deployment for architects.
 
-
-### Local Setup
+## Local Setup
 
 1. **Clone the repository**
    ```bash
@@ -18,7 +17,8 @@ A systematic breadth-first guide to microservices design, patterns, and deployme
 
 3. **Install dependencies**
    ```bash
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   source .venv/bin/activate 
+    # On Windows: .venv\Scripts\activate
    pip install -r requirements.txt
    ```
 
