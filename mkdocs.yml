@@ -1,47 +1,58 @@
 site_name: Microservices Architecture
 site_description: Systematic breadth-first guide — design, code, and deploy microservices for architects
 site_author: Senior Developer Transition Guide
+docs_dir: docs
+repo_url: https://github.com/nitinkc/Microservices-Design-Architecture
 
 theme:
   name: material
-  color_mode: auto
-  user_color_mode_toggle: true
-  highlightjs: true
   features:
-    - content.tooltips
-  hljs_languages:
-    - yaml
-    - java
-    - python
-    - javascript
-    - go
-    - sql
-    - bash
-
-plugins:
-  - search
-  - glossary:
-      unknown_warning: false
+    - navigation.tabs
+    - navigat ion.sections
+    - navigation.expand
+    - toc.integrate
+    - content.code.copy
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: cyan
+      accent: blue
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: cyan
+      accent: blue
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
 
 markdown_extensions:
-  - abbr  
-  - attr_list
-  - pymdownx.snippets
   - admonition
-  - pymdownx.caret
   - pymdownx.details
-  - pymdownx.superfences
   - pymdownx.highlight:
       anchor_linenums: true
+      use_pygments: true
   - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
+  - toc:
+      permalink: true
+  - abbr
   - attr_list
   - md_in_html
-  - tables
-  - footnotes
-  - def_list
+  - pymdownx.snippets:
+      base_path: docs
 
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js
+  - js/mermaid-init.js
 nav:
   - Home: index.md
   - Design & Patterns:
