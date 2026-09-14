@@ -3,6 +3,7 @@ site_description: Systematic breadth-first guide — design, code, and deploy mi
 site_author: Senior Developer Transition Guide
 docs_dir: docs
 repo_url: https://github.com/nitinkc/Microservices-Design-Architecture
+repo_name: nitinkc/Microservices-Design-Architecture
 
 theme:
   name: material
@@ -15,14 +16,14 @@ theme:
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: cyan
+      primary: blue grey
       accent: blue
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: cyan
+      primary: blue grey
       accent: blue
       toggle:
         icon: material/weather-sunny
