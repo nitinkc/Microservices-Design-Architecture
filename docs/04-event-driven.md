@@ -177,3 +177,53 @@ Building reliable event-driven systems requires handling ordering, duplicates, a
 
 → **[Deep Dive: Messaging Patterns](04.07-messaging-patterns.md)** — Message ordering, idempotency, DLQ, at-least-once delivery, deduplication
 
+
+---
+
+## 📝 Knowledge Check
+
+<quiz>
+`PaymentFailed` vs `ChargePayment` — which is an event and which is a command, and why does the distinction change your architecture?
+- [ ] `ChargePayment` is the event
+- [x] `PaymentFailed` is the event (past-tense fact, publisher doesn't know listeners, can't be rejected); `ChargePayment` is a command (imperative, has a target, can be refused). Events enable decoupled choreography; commands couple caller to a specific handler — choose choreography for reactions, commands when you need a decision enforced in one place
+- [ ] They're the same thing on different transports
+- [ ] Commands are always async
+
+tense encodes direction. Events broadcast facts; commands request work. If the Order service sends `ChargePayment` to Kafka, it's really doing point-to-point messaging through a broker — fine, but don't call it 'event-driven decoupling.' Real events invert knowledge: the producer stays ignorant of consumers.
+</quiz>
+<quiz>
+Kafka offers at-most-once, at-least-once, and 'exactly-once.' What does production 'exactly-once' actually consist of?
+- [ ] Set `enable.idempotence=true` and you're done
+- [x] Producer idempotence (dedupes retries within a session) + transactions (atomic multi-partition writes) ON THE KAFKA SIDE, plus consumer-side idempotency (dedupe by event ID / natural key) — because 'exactly-once' covers broker delivery, not your processing logic's side effects like DB writes or downstream calls
+- [ ] `acks=0` for speed
+- [ ] Exactly-once is impossible — don't try
+
+'exactly-once' is scoped: Kafka can guarantee a message is stored once, not that your consumer's *effects* happen once. After the commit, your consumer can still crash and reprocess. End-to-end exactly-once = at-least-once delivery + idempotent processing (dedupe table, upsert by natural key, or transactional outbox on the consumer side).
+</quiz>
+<quiz>
+Why do event-driven systems pair so naturally with CQRS — and what's the cost?
+- [ ] They don't — CQRS is for REST
+- [x] Events are the natural feed for projections: the write side emits facts, and any number of read models subscribe and denormalize — queries get purpose-built, fast shapes without touching the write path. Cost: eventual consistency between write and read, plus operational burden of running/resetting projectors
+- [ ] CQRS removes the need for events
+- [ ] Events are only for commands
+
+events answer 'how does the read model stay populated?' — each projector is just another consumer building its own view. The price is lag (user writes then reads stale), schema versioning across projector boundaries, and the operational reality that projections need rebuild tooling when their logic changes.
+</quiz>
+<quiz>
+Your saga's compensating transaction fails too — e.g., `ReleaseInventory` errors while handling `PaymentFailed`. What must exist?
+- [ ] Nothing — double failures are too rare
+- [x] A retry-with-backoff path on compensation (compensations are themselves idempotent steps), a dead-letter/escalation path for exhausted retries, and an alert + manual remediation runbook — a stuck saga is a production incident, not a log line
+- [ ] Re-run the whole saga from the start
+- [ ] Restore the database from backup
+
+compensation failure leaves the system in a *diverged* state (payment refunded? inventory held?) that won't heal itself. Treat compensations as first-class operations: idempotent, retried, monitored, and escalated. The alert for 'saga stuck in COMPENSATING > N minutes' is as important as the happy path.
+</quiz>
+<quiz>
+Why is the outbox needed if your service already publishes to Kafka reliably 99.99% of the time?
+- [ ] It's not — 99.99% is good enough
+- [x] Because the failure mode is silent divergence: DB committed, event never published — the order exists but nobody knows. At scale, 0.01% of millions of orders = daily corruption that only surfaces as 'phantom' inventory mismatches weeks later; the outbox makes write+publish atomic so the event can't be lost independently of the data
+- [ ] Outbox is only for low-volume systems
+- [ ] Kafka retries cover the gap
+
+the dual-write problem is about *atomicity*, not broker reliability. Any crash/network blip between `commit()` and `send()` orphans the change. Rare-probability × high-volume = guaranteed incidents. The outbox + relay (or CDC) makes 'the data and the intent to announce it' a single atomic commit.
+</quiz>

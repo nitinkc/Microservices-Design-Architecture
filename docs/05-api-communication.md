@@ -169,3 +169,53 @@ Configuration (DB URLs, API keys, feature flags) must be separate from code.
 
 → **[Deep Dive: Configuration Management](09.08-configuration-management.md)** — Spring Cloud Config, environment profiles, secrets managers, feature flags
 
+
+---
+
+## 📝 Knowledge Check
+
+<quiz>
+Service A calls B calls C calls D synchronously. Each has 99.9% availability. What's the chain's availability, and what's the architectural lesson?
+- [ ] 99.9% — availability doesn't compound
+- [x] ~99.6% (0.999⁴) and worse in practice — every synchronous hop multiplies failure probability and adds tail latency; deep sync call chains are distributed monoliths. Lesson: shorten sync chains, use async/events where the interaction doesn't need an immediate answer, and apply timeouts + circuit breakers on every hop you keep
+- [ ] 100% — retries fix it
+- [ ] It depends on the load balancer
+
+sync coupling compounds availability and latency: the chain is only as available as the product of its links, and its P99 is the sum of P99s plus stragglers. Async decoupling ('does the caller need the answer now, or just eventually?') is the lever; where sync is truly needed, protect each hop deliberately.
+</quiz>
+<quiz>
+REST vs gRPC vs GraphQL for: (a) high-frequency internal service-to-service calls, (b) a public API for unknown third-party devs, (c) a mobile app whose screens vary widely?
+- [ ] REST for everything
+- [x] (a) gRPC — binary, schema-first, streaming, low overhead for internal RPC; (b) REST — ubiquitous tooling, caching, and ecosystem for external consumers; (c) GraphQL or BFF — client-driven field selection avoids over/under-fetching across diverse screens
+- [ ] GraphQL for everything
+- [ ] gRPC for the public API — it's fastest
+
+match the protocol to the consumer: gRPC wins inside your trust boundary (contracts, perf, streaming); REST wins at the open boundary (universal clients, HTTP caching, familiarity); GraphQL/BFF wins when one backend serves divergent client shapes. The mistake is treating it as a fashion choice rather than 'who consumes this and what do they need?'
+</quiz>
+<quiz>
+What should an API gateway own vs. what should stay in services?
+- [ ] Everything at the gateway — centralize
+- [x] Gateway: cross-cutting edge concerns — routing, authN token validation, global rate limiting, TLS termination, request logging. Services: all business logic, authZ decisions scoped to the domain, and their own resilience (per-dependency timeouts/breakers — the gateway can't know your dependency's semantics)
+- [ ] AuthZ at the gateway for everything
+- [ ] Services shouldn't validate tokens if the gateway does
+
+gateway = generic policy, services = domain decisions. Coarse 'is this token valid' at the edge; fine-grained 'may this user view *this* order' in the service (defense in depth — a bypassed gateway shouldn't open everything). Business rules at the gateway recreate the ESB anti-pattern.
+</quiz>
+<quiz>
+When is a BFF the wrong answer?
+- [ ] Never — more layers, more decoupling
+- [x] When a team adds a BFF 'because Netflix does it' but there's only one client, or the BFF becomes a dumping ground for business logic that belongs in domain services — each BFF is another service to deploy, secure, monitor, and version; the justification must be real per-client divergence
+- [ ] When you have two clients
+- [ ] When using GraphQL
+
+BFF is an answer to *client divergence*, not a default layer. One client = pointless indirection. And watch the gravity well: BFFs accumulate 'just one more rule' until pricing logic lives in the mobile BFF where the web team can't see it — BFFs transform and aggregate; they don't decide.
+</quiz>
+<quiz>
+Service mesh vs API gateway — a new engineer uses them interchangeably. Correct them.
+- [ ] They're the same product category
+- [x] Gateway = north-south: traffic crossing the edge between outside clients and your system (auth, routing, rate limits at the perimeter). Mesh = east-west: service-to-service traffic inside (mTLS, retries, telemetry between workloads). They overlap on features but answer different questions — many systems run both
+- [ ] The mesh replaces the gateway always
+- [ ] Gateways are only for monoliths
+
+direction of traffic is the distinction: edge policy vs. internal transport policy. Modern meshes can do ingress (Istio ingress gateway) blurring the line, but the conceptual split remains: who is this traffic and what's being enforced on it? Edge needs WAF/auth/quota semantics; internal needs identity, observability, and safe retries.
+</quiz>

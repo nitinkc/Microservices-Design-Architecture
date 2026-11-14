@@ -166,3 +166,53 @@ Named after the watertight compartments in a ship hull.
 | **Goal** | Verify resilience claims before incidents do it for you |
 
 → **[Deep Dive: Chaos Engineering](06.07-chaos-engineering.md)** — GameDays, fault injection, Chaos Mesh, blast radius control
+
+---
+
+## 📝 Knowledge Check
+
+<quiz>
+A downstream service degrades — p99 latency goes from 100ms to 30s but still 'works.' Your service's thread pool is now exhausted. Which patterns would have contained this, in order of defense?
+- [ ] Just add more threads
+- [x] Timeout first (bound the wait — a 30s response is a failure you refuse to wait for), bulkhead second (isolate dependency calls to a capped pool so the rest of your service keeps running), circuit breaker third (stop calling a known-bad dependency entirely, fail fast, let it recover)
+- [ ] Circuit breaker alone — it's the strongest
+- [ ] Health checks — they should have caught it
+
+'slow but alive' is the failure naive setups miss: liveness probes pass while the service drowns you. Timeout bounds each call; bulkhead caps how much of YOUR capacity it can consume; breaker stops hammering it. None is sufficient alone — resilience is layered, and each pattern covers a different failure class.
+</quiz>
+<quiz>
+Why does a retry storm make an outage *worse*, and what two retry settings prevent it?
+- [ ] Retries help — they're always good
+- [x] A struggling dependency receives N×M amplified load (every client retrying at once), deepening the collapse. Prevention: exponential backoff (increasing gaps let it recover) + jitter (randomize so thousands of clients don't retry in synchronized waves) — plus a retry budget and only retrying idempotent operations
+- [ ] Retry immediately — faster recovery
+- [ ] Fixed 1-second retries are optimal
+
+synchronized retries are a self-inflicted DDoS: all clients time out together, all retry together, the dependency never catches a breath. Jittered exponential backoff decorrelates clients and gives recovery room. Also cap total retries (2–3, not 10) and add a budget ('max 10% of traffic may be retries') so degradation doesn't multiply load.
+</quiz>
+<quiz>
+Fallback vs graceful degradation vs erroring out — when is each right for a product-recommendation call inside checkout?
+- [ ] Always fall back to something
+- [x] Recommendations are nice-to-have → graceful degradation: skip the module and render checkout without it (a cached/default fallback is second-best if static content is acceptable). Checkout itself must NOT degrade silently — a failed payment call is an honest 5xx + retry path, never a fake success
+- [ ] Error the whole checkout if recommendations fail
+- [ ] Fallback to last month's cached recommendations always
+
+the design question is 'what's this call's criticality class?' For non-critical enrichments, missing data beats a failed page — but choose the *shape* of degradation deliberately (empty module vs stale cache vs default). For the transaction itself, fake success is the worst outcome — silent degradation on a payment is data corruption, not resilience.
+</quiz>
+<quiz>
+Why is 'make every operation idempotent' a resilience pattern, not just a correctness nicety?
+- [ ] It's only about correctness
+- [x] Because every resilience mechanism assumes it: retries, timeouts triggering retries upstream, redelivered messages, and client resubmissions all replay operations — non-idempotent ops turn your safety machinery into a corruption machine (double charge, double shipment). Idempotency is what makes retrying safe
+- [ ] Idempotency slows systems down
+- [ ] It's only for POST endpoints
+
+resilience and idempotency are a package deal: you can't safely retry a non-idempotent op, and distributed systems WILL retry (clients, proxies, brokers, timeouts). Idempotency keys, upsert-by-natural-key, and 'check state before acting' convert 'retry = corruption' into 'retry = harmless re-delivery.'
+</quiz>
+<quiz>
+Chaos engineering in production — what's the minimal safety bar before you inject failure on purpose?
+- [ ] A signed waiver
+- [x] A defined steady state ('checkout success > 99.5%'), a hypothesis, bounded blast radius (one pod/one AZ/small % of traffic), abort conditions/guardrails that halt the experiment automatically on SLO breach, and business-hours execution with the owning team present — chaos without aborts is just an outage with extra steps
+- [ ] Run it at 2 a.m. — least traffic
+- [ ] Only in staging — never prod
+
+chaos is an *experiment*: hypothesis → controlled injection → measure steady state → learn. The discipline that separates it from recklessness: minimal blast radius, automated kill-switch on SLO impact, and humans watching. Staging-only chaos finds staging problems — the production-specific failures (real traffic patterns, real data scale) need prod, bounded and guarded.
+</quiz>

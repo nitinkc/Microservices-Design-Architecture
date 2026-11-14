@@ -166,3 +166,53 @@ Elite performers ship 3+ times per day with low defect rates and recover from in
 
 → **[Deep Dive: DORA Metrics](07.06-dora-metrics.md)** — Deployment frequency, lead time, change failure rate, MTTR measurement and improvement
 
+
+---
+
+## 📝 Knowledge Check
+
+<quiz>
+Logs, metrics, traces — which pillar answers which question at 3 a.m.?
+- [ ] They're interchangeable — pick your favorite tool
+- [x] Metrics: 'IS something wrong and how much' (dashboards, alerts — cheap aggregates, bad at 'why'). Traces: 'WHERE in the request path is it wrong' (span waterfall across services). Logs: 'WHY exactly — the detailed evidence' (rich, expensive, per-event). You navigate metrics → trace → log, not one pillar alone
+- [ ] Logs answer everything — just grep harder
+- [ ] Traces are only for debugging latency
+
+the pillars are complementary zoom levels: metrics detect (RED on dashboards), traces localize (which span is red), logs explain (the exception inside the span). A system with only logs drowns you in detail with no detection; only metrics tells you it's broken, not where; only traces requires you to already know where to look.
+</quiz>
+<quiz>
+RED vs USE — which do you apply to a service vs. a database node?
+- [ ] RED for everything
+- [x] RED (Rate, Errors, Duration) for request-driven *services* — the user-facing symptom triad. USE (Utilization, Saturation, Errors) for *resources* — CPU, disk, DB pool, network — where 'how busy is the thing' predicts failure before requests error
+- [ ] USE is for users only
+- [ ] RED is only for Redis
+
+RED sees the *demand* side ('how are calls doing'), USE sees the *supply* side ('how full is the resource'). A DB at 95% pool saturation (USE) shows trouble before errors spike (RED) — leading vs lagging indicators. Monitor services with RED, infrastructure with USE, and connect the two when root-causing.
+</quiz>
+<quiz>
+Why does a trace ID in every log line change your life during an incident?
+- [ ] It makes logs prettier
+- [x] It converts 'search 50 services' logs for clues' into 'follow one request's exact path': filter by trace ID and you see the full causal chain of a single failing request across every service — the difference between hours of correlation and a single query
+- [ ] It's required for GDPR
+- [ ] It reduces log volume
+
+correlation is the entire game in distributed debugging: without a propagated ID, five services logging the same failing request are five uncorrelated streams. Context propagation (W3C traceparent, B3) threading one ID through every hop is what makes 'distributed' debuggable — and it's free once instrumentation adds it to your log MDC.
+</quiz>
+<quiz>
+SLO 99.9% monthly — how much error budget is that, and what's it FOR?
+- [ ] Zero tolerance — always aim for no errors
+- [x] ~43 minutes/month of downtime-equivalent: the budget is your *permission slip* for risk — deploys, experiments, and retries that consume budget are allowed; when the budget burns too fast, you freeze feature work for reliability. It's a negotiation instrument between speed and stability, not a failure metric
+- [ ] It's the SLA penalty clause
+- [ ] It resets weekly
+
+100% reliability is infinitely expensive and usually unnecessary — the budget formalizes 'how wrong can we be.' Teams that treat 99.9% as 'must never error' can't ship; the error-budget framing turns it into 'here's the risk currency we can spend.' SLA ≠ SLO: SLA is the contract with consequences, SLO is the internal target you alert on *before* breaching the SLA.
+</quiz>
+<quiz>
+Alert fatigue: on-call ignores the dashboard because 90% of pages are noise. What's the fix?
+- [ ] More alerts — coverage is safety
+- [x] Alert on symptoms users feel (SLO burn rate, error budget consumption), not causes (CPU high); every alert must be actionable ('if this pages me, I do X'), else it's a dashboard metric not a page — and routinely delete/quiet alerts that fire without consequence
+- [ ] Route alerts to email
+- [ ] Set thresholds higher so they page less
+
+pages are for 'human must act now': symptom-based alerting (users can't check out) not cause-based (node at 85% — which is fine until it isn't). An alert that fires and resolves without action trains the team to ignore it — every non-actionable page is a bug in your monitoring, not in the system. Burn-rate alerting on SLOs is the modern standard for exactly this reason.
+</quiz>

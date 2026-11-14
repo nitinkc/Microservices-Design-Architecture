@@ -130,3 +130,53 @@ graph TD
 → **[Deep Dive: Aggregate Design](02.04-aggregate-design.md)** — Invariants, sizing aggregates, cross-aggregate consistency
 
 → **[Deep Dive: DDD and Microservices Alignment](02.05-ddd-microservices-alignment.md)** — Mapping DDD to service boundaries
+
+---
+
+## 📝 Knowledge Check
+
+<quiz>
+Your sales team says 'customer' means a lead; support says it means a paying account; billing says it means a legal entity with a tax ID. One `Customer` table tries to serve all three. What DDD concept does this violate and what's the fix?
+- [ ] Event sourcing — record customer changes as events
+- [x] Bounded Context — 'Customer' is three different models in three contexts; create separate bounded contexts (Sales, Support, Billing), each with its own Customer model and ubiquitous language, mapped via context mapping
+- [ ] The repository pattern — add three repositories
+- [ ] Microservices — split the table into three
+
+the same word meaning different things to different departments is the classic bounded-context signal. Forcing one model guarantees every context is poorly served and changes collide. Each context gets its own consistent model; integration happens explicitly at the boundaries (context map, ACLs, events).
+</quiz>
+<quiz>
+What makes a language 'ubiquitous' in the DDD sense — and what breaks it in practice?
+- [ ] It's the company-wide glossary everyone must use
+- [x] It's the shared language developed *within* a bounded context, used identically by domain experts, developers, and the code itself — it breaks when code uses different terms than the business ('order' vs 'purchase'), or the same term silently means different things across contexts
+- [ ] It's English instead of the local language
+- [ ] It's the API documentation
+
+ubiquitous language is per-bounded-context, not company-wide. The test: a domain expert reading your method names should recognize their vocabulary, and a developer in a meeting should use the same words as the business. Translation layers in code ('adapter' renaming everything) are a smell the language drifted.
+</quiz>
+<quiz>
+Classify: (a) a recommendation engine unique to your company, (b) user authentication, (c) standard invoicing. How should investment differ?
+- [ ] All get equal investment — consistency matters
+- [x] (a) Core domain — build in-house with your best people, this is your differentiation; (b) generic subdomain — buy/use a commodity (Auth0, Cognito); (c) supporting subdomain — build simply or outsource, it must work but doesn't differentiate
+- [ ] Outsource all three — focus on features
+- [ ] Build all three — security requires ownership
+
+subdomain classification drives investment: core domains deserve senior talent and careful modeling; generic subdomains are solved problems (don't build your own auth); supporting subdomains need adequate but not excellent implementations. Wasting core-domain effort on a generic subdomain is the most common misallocation.
+</quiz>
+<quiz>
+An aggregate rule of thumb: 'one transaction = one aggregate.' Why, and what's the correct pattern when a use case must change two aggregates?
+- [ ] The rule is wrong — always lock both aggregates in one transaction
+- [x] Modifying two aggregates in one transaction couples their availability and scalability; instead, commit the first aggregate, publish a domain event, and let the second aggregate update in its own transaction (eventual consistency via saga/process manager)
+- [ ] Denormalize both aggregates into one table
+- [ ] Use a distributed lock
+
+an aggregate is a consistency boundary enforced by a transaction. Stretching a transaction across two aggregates means a lock on one blocks the other and both services' availability is chained. Events + eventual consistency is the DDD-endorsed answer; if you *constantly* need atomic updates across two aggregates, your boundary is probably wrong.
+</quiz>
+<quiz>
+In practice, what does it mean that a bounded context 'aligns' with a microservice?
+- [ ] Each bounded context becomes exactly one database table
+- [x] The service's API, data, and team are owned within one bounded context's model; integration to other contexts goes through explicit contracts (events, ACLs, published language) — never shared tables or leaking the other context's model
+- [ ] One service can host many contexts if they're small
+- [ ] Bounded contexts are only for the monolith
+
+bounded context is the *candidate boundary* for a service: it already separates a consistent model with its own language. Aligning means the service owns that model end-to-end and talks to other contexts through deliberate translation (ACL) or published contracts. If a service must join another service's tables, the bounded context was violated.
+</quiz>

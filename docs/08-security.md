@@ -11,6 +11,15 @@
 | **Example**    | Username + password, SSO, biometric | RBAC, ABAC, OAuth scopes          |
 
 
+```mermaid
+flowchart LR
+    REQ["request"] --> GW["<b>edge / gateway</b><br/>AuthN — verify token:<br/>signature · issuer · expiry<br/>+ rate limit · TLS"]
+    GW --> SVC["<b>domain service</b><br/>AuthZ — may THIS caller<br/>touch THIS resource?<br/>(needs domain context)"]
+    SVC --> DB[("least-privilege<br/>data access")]
+    style GW fill:#dae8fc
+    style SVC fill:#d5e8d4
+```
+
 ## OAuth2 & OIDC
 
 **OAuth2** = authorization framework (grants access to resources).
@@ -144,3 +153,53 @@ Service Mesh (Istio) can automate mTLS between all services with zero code chang
 | 8  | **Security Misconfiguration**                | Default creds, open CORS, debug endpoints in production  |
 
 
+
+---
+
+## 📝 Knowledge Check
+
+<quiz>
+Authentication vs authorization — where does each belong in a microservices stack?
+- [ ] Same thing, same place
+- [x] AuthN ('who are you') is centralized — the IdP/gateway validates identity (JWT, mTLS) so every service doesn't re-implement login. AuthZ ('may you do THIS') is decentralized — the resource-owning service decides ('can this user view *this* order?') because only it has the domain context — coarse role checks can happen at the edge, fine-grained checks cannot
+- [ ] Both at the gateway
+- [ ] Both in each service
+
+the split is by *context*: identity verification is generic (any service can verify a signature); authorization needs domain knowledge the edge lacks ('is this user's subscription active for this feature?'). Centralizing authZ at the gateway means the gateway needs your business rules — the ESB trap again, with security stakes.
+</quiz>
+<quiz>
+Authorization Code + PKCE vs Client Credentials vs implicit — which for: SPA, service-to-service, and why is implicit dead?
+- [ ] Implicit for both — simplest
+- [x] SPA/public clients: Auth Code + PKCE (the code-verifier protects the code exchange without a client secret). M2M/service calls: Client Credentials (no user, the service is its own principal). Implicit is deprecated because tokens in the URL fragment leak through browser history/referer logs and can't be refreshed safely
+- [ ] Client credentials for the SPA — no user needed
+- [ ] Password grant for everything
+
+grant type maps to *who holds the secret*: public clients can't hold secrets (PKCE replaces secrecy with proof), confidential M2M clients can (client credentials). Implicit exposed access tokens in URLs — URL leakage is a real exfiltration path, and the flow couldn't fix it. ROPC/password grant shares the same sin: it teaches users to hand credentials to the app.
+</quiz>
+<quiz>
+'We validate the JWT signature — so the token is trusted.' What else must be checked?
+- [ ] Nothing — signature is enough
+- [x] `exp`/`nbf` (is it valid *now*), `iss` (did OUR IdP issue it — not just any valid JWT), `aud` (was it minted *for this service* — a token for the photos API shouldn't unlock payments), `alg` allowlist (reject `none` and unexpected algorithms), and key rotation via JWKS — signature is necessary, claims are the contract
+- [ ] Only expiry matters
+- [ ] Check the issuer manually
+
+a perfectly-signed token can still be wrong: expired, minted by a different realm, or scoped for a different audience. `aud` validation is the silent killer — token replay across your own services works when every service accepts every token the IdP mints. Validation is a checklist, not a signature check.
+</quiz>
+<quiz>
+Service-to-service auth: mTLS vs service-account tokens vs SPIFFE/SPIRE — what does each actually authenticate?
+- [ ] All authenticate the user
+- [x] mTLS authenticates the *connection's identity* (both ends prove workload identity via certs — mesh does this invisibly). K8s service accounts give pods a platform-issued token for calling the API/other services. SPIFFE/SPIRE provides *portable* cryptographic workload identity (SVID) that works across platforms/clouds — identity as infrastructure, not config
+- [ ] mTLS is only for browsers
+- [ ] SPIFFE is a token format
+
+the question is 'what identifies a workload': mTLS gives cryptographic identity at the transport; service accounts are platform-bound identities; SPIFFE generalizes it (spiffe://trust-domain/workload) so identity isn't tied to one cluster or vendor. They compose: SPIRE issues the SVIDs that mTLS connections then present.
+</quiz>
+<quiz>
+A teammate stores the DB password in a Kubernetes Secret and calls it 'encrypted.' What's the correction?
+- [ ] Correct — Secrets are encrypted
+- [x] K8s Secrets are base64 by default — encoding, not encryption: anyone with API read access or an etcd backup reads them. Hardening requires encryption-at-rest in etcd (KMS plugin), RBAC scoping, and ideally external secret stores (Vault, cloud secret managers) via an operator — 'Secret' is a delivery mechanism, not a protection guarantee
+- [ ] Use ConfigMaps instead
+- [ ] Base64 IS encryption
+
+the name 'Secret' is aspirational, not descriptive: out of the box it's plaintext-plus-a-step. The real controls: etcd encryption at rest (KMS provider), tight RBAC on `secrets` reads, no mounting as env vars where they leak to crash dumps/subprocesses (prefer volume mounts), and rotation — or externalize to a real secrets manager whose whole job is this.
+</quiz>

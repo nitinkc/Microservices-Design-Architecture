@@ -21,6 +21,16 @@ When asked to design a system, structure your answer:
 
 ---
 
+```mermaid
+flowchart TB
+    Q["read the prompt"] --> R["<b>clarify</b> — scale? consistency?<br/>latency? who's the user?"]
+    R --> BD["<b>boundaries</b> — services /<br/>bounded contexts"]
+    BD --> I["<b>interactions</b> — sync vs async<br/>events? sagas?"]
+    I --> F["<b>failure modes</b> — what breaks?<br/>retries · idempotency · DLQ"]
+    F --> O["<b>operate</b> — observe · deploy · secure"]
+    O -.->|"requirements shift<br/>→ loop back"| R
+```
+
 ## Common Design Scenarios
 
 ### Distributed Transactions — Checkout Service
@@ -163,3 +173,53 @@ Before your interview, be able to explain these without hesitation:
 - [ ] When NOT to use event sourcing, microservices, and CQRS
 - [ ] DDD context mapping patterns — especially ACL and Published Language
 - [ ] 12-Factor App principles — at least factors 3, 5, 6, 9, 11
+
+---
+
+## 📝 Knowledge Check
+
+<quiz>
+'Design a checkout service' — the interviewer says 'and payment must not double-charge.' Which concepts do you name in the first 60 seconds?
+- [ ] 'We use a queue'
+- [x] Idempotency keys on the payment call, saga (the multi-service transaction), outbox for 'order saved + event published' atomicity, timeouts+retries with safe replay, and the compensating action if a step fails — name the *failure modes* these prevent, not just the pattern names
+- [ ] 'Two-phase commit solves it'
+- [ ] 'Use a database transaction'
+
+the interviewer is testing whether you *start* from failure modes: 'double charge' = 'retry without idempotency' → idempotency keys; 'multi-service consistency' → saga; 'event lost between commit and publish' → outbox. 2PC shows you know the theory but not why it's avoided (blocking, coordinator SPOF); a plain DB transaction shows you missed that this is a *distributed* problem.
+</quiz>
+<quiz>
+Asked 'how would you build a real-time audit trail,' why is event sourcing a strong answer — and what caveat must you add to sound like a senior?
+- [ ] Event sourcing is always right — no caveats
+- [x] The audit trail IS the event stream — complete history, temporal queries, replayable state are exactly what audit wants. The caveat: you inherit projection/snapshot/event-versioning complexity and GDPR erasure needs crypto-shredding — so 'event sourcing fits *if* you truly need replayable history, not just an audit column on a normal table'
+- [ ] Use a log file — simpler
+- [ ] Audit trails don't need events
+
+senior = knowing when the pattern *isn't* worth it: audit-as-raison-d'être is event sourcing's sweet spot, but 'we also need to store customer PII' raises erasure-vs-immutability, and 'we just need created_at/updated_at' means the complexity buys nothing. The trade-off articulation is the answer — the pattern choice is almost secondary.
+</quiz>
+<quiz>
+An ADR records 'use saga for checkout.' What separates a useful ADR from a write-only artifact?
+- [ ] The decision itself is what matters
+- [x] The context + rejected alternatives + consequences: 'we had N services, no distributed transactions, compensation was acceptable' + 'rejected 2PC (blocking, coordinator SPOF) and shared DB (coupling)' + 'accepted: eventual consistency, compensation complexity, idempotent steps required' — the value is future-you understanding *why* when reconsidering, not just *what*
+- [ ] ADRs are for compliance — nobody reads them
+- [ ] Longer is better
+
+an ADR's job is to make the decision *revisitable*: the constraints and rejected options are what let a future team decide 'does this still hold when our context changed?' A 'decision + no context' record is a conclusion with no reasoning — useless the moment circumstances differ. Format matters less than capturing alternatives-rejected and consequences-accepted.
+</quiz>
+<quiz>
+'Design a live inventory dashboard' — the interviewer pushes 'customers complain counts are stale.' Which trade-off do you surface?
+- [ ] 'Cache more'
+- [x] Read-path consistency vs. scale: live fan-out to every service = freshest + slowest + most coupled; event-fed read model = fast + stale by replication lag. The senior answer names the lag explicitly and proposes the mitigation set — read-your-writes for the writer, bounded-staleness display ('as of 2 min ago'), or CQRS only on the views that can tolerate it
+- [ ] 'Make it synchronous — always fresh'
+- [ ] 'Staleness is unacceptable — drop the feature'
+
+this question tests whether you turn 'stale data' into a *designed trade-off* rather than a bug: 'freshness costs coupling and latency.' The strong answer: quantify tolerable staleness per view, pick composition vs. projection per view, and handle the writer's own-read case specifically. 'Make it synchronous' punts the actual question — how fresh does it need to be vs. what does freshness cost.
+</quiz>
+<quiz>
+The 'know cold' list — why does an interviewer ask 'when would you NOT use microservices' more often than 'what are microservices'?
+- [ ] Trick question for juniors only
+- [x] Because the *boundary condition* is the knowledge: anyone can recite the pattern; knowing when it fails (unstable domains, small teams, missing CI/CD/observability maturity, monolith-not-actually-painful) proves you can apply it. Answering the 'when NOT' question correctly demonstrates the judgment the whole interview is actually measuring
+- [ ] It's a trick with no right answer
+- [ ] Microservices are always the answer
+
+every architecture question is secretly 'do you understand the trade-off space well enough to know where this pattern's edges are.' The 'know cold' items are the recurring trade-off axes (consistency, coupling, failure modes) — the interviewer wants you to reason from constraints to pattern, not pattern to justification. 'When NOT' answers are what distinguish seniority.
+</quiz>

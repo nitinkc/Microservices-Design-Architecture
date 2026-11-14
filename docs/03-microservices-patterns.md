@@ -155,3 +155,53 @@ Cache frequently accessed data to reduce database load and latency.
 
 ---
 
+
+---
+
+## 📝 Knowledge Check
+
+<quiz>
+A checkout request must write the order row AND publish `OrderCreated`. The service crashes between the DB commit and the Kafka publish. Which pattern closes this hole?
+- [ ] Retry the publish manually on restart
+- [x] The Outbox pattern: write the event to an `outbox` table in the same transaction as the order — a relay (poller or CDC like Debezium) then publishes it, turning 'DB + broker' into an atomic operation with at-least-once delivery
+- [ ] Distributed transaction (2PC) across Postgres and Kafka
+- [ ] Increase Kafka producer `acks`
+
+this is the dual-write problem, the single most common data-corruption bug in event-driven systems. The outbox makes the event part of the local transaction; the relay guarantees delivery. Consumers must still be idempotent because delivery is at-least-once. `acks=all` doesn't help — the crash happened *before* the publish call.
+</quiz>
+<quiz>
+Which decomposition gives services that map to 'things the business does' (Order Management, Inventory, Shipping) rather than technical layers — and what's the anti-pattern alternative?
+- [ ] Decompose by DAO/entity — one service per table
+- [x] Decompose by business capability (or DDD subdomain): services own a whole vertical slice of a business function; the anti-pattern is technical decomposition (UI service, 'business logic' service, 'data' service) which maximizes cross-service calls for every feature
+- [ ] Decompose by HTTP verb
+- [ ] Decompose randomly — boundaries don't matter
+
+capability-based services let a team own a function end-to-end: most changes land in one service. Entity services (one CRUD service per table) are the seductive anti-pattern — every request choreographs five 'services' that are just table wrappers, and no single service can enforce business invariants.
+</quiz>
+<quiz>
+Your mobile app needs 3 fields; the desktop app needs 30 from the same endpoint. Two responses diverge. Which pattern resolves this without bloating the core API?
+- [ ] Make everyone use the 30-field response
+- [x] Backend-for-Frontend (BFF): a per-client-type API layer that aggregates/tailors backend calls — mobile BFF returns 3 fields, web BFF returns 30 — each owned by the client team that consumes it
+- [ ] GraphQL is mandatory here
+- [ ] Add a query parameter `?fields=`
+
+BFF exists because 'one API for all clients' forces either a lowest-common-denominator response or client-specific if/else in the core service. Per-client BFFs keep the domain services generic and let each client team control its own contract. `?fields=` helps slightly but can't fix *shape* differences or orchestration needs.
+</quiz>
+<quiz>
+Client-side vs server-side service discovery — what's the operational difference when a new instance registers?
+- [ ] No difference — registration is instant
+- [x] Client-side (Eureka + Ribbon-style): each client caches the registry and picks an instance — fast, no extra hop, but discovery logic is in every client and refresh lag can send traffic to dead pods; server-side (K8s DNS/LoadBalancer): the platform routes, clients stay dumb, but you get an extra hop and depend on the LB's health propagation
+- [ ] Server-side is always better
+- [ ] Client-side requires a service mesh
+
+the choice is where intelligence lives. Client-side puts routing in the app (language-specific, needs heartbeat/refresh handling for stale entries); server-side puts it in the platform (K8s Service DNS is the zero-effort default). In Kubernetes you mostly get server-side discovery free; meshes add L7 routing on top.
+</quiz>
+<quiz>
+Cache-aside vs write-through for a hot product-price cache. What changes on write and on failure?
+- [ ] They're identical except naming
+- [x] Cache-aside: writes go to DB only; reads populate cache on miss (stale window until TTL/invalidation; DB never blocked by cache writes). Write-through: every write updates DB and cache synchronously (cache always fresh, but write latency includes the cache and a cache failure can fail the write)
+- [ ] Write-through means writes skip the DB
+- [ ] Cache-aside requires Redis Cluster
+
+cache-aside optimizes write latency and tolerates staleness; you must handle stampede-on-miss and invalidation. Write-through optimizes read freshness at the cost of write coupling to cache availability. Pick based on staleness tolerance and whether writes can afford the extra hop — and for high-read skew, combine with versioned keys or event-based invalidation.
+</quiz>

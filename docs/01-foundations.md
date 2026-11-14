@@ -125,3 +125,44 @@ A distributed system can guarantee only **2 of 3**:
 | **Separation of Concerns**   | Each layer/service has one job                     |
 
 → **[Deep Dive: Core Design Principles](01.06-core-design-principles.md)** — Coupling, cohesion, fail fast, immutable infrastructure
+
+---
+
+## 📝 Knowledge Check
+
+<quiz>
+Your payment service and inventory service share one database schema so they can join tables and stay 'consistent.' Which foundational principle does this violate, and what's the biggest production risk?
+- [ ] Conway's Law — the teams will reorganize around the schema
+- [x] Database-per-service / loose coupling — a schema change or outage in one team's tables can break or lock the other service; you also can't scale or version them independently
+- [ ] The CAP theorem — you can't have consistency and availability anyway
+- [ ] BASE — you should never aim for consistency in microservices
+
+a shared schema is the tightest possible coupling. It creates a single point of failure, forces coordinated deployments, and makes service ownership blurry. Consistency across services should be handled with sagas and events, not shared tables.
+</quiz>
+<quiz>
+During a network partition between two data centers, your product catalog must keep accepting writes (business says downtime costs more than stale data). Per CAP, which store fits, and what must you implement?
+- [ ] A CP store like etcd — availability is more important
+- [x] An AP store (e.g., Cassandra-style quorum reads/writes below quorum) — plus a conflict-resolution strategy like last-write-wins or CRDTs for when the partition heals
+- [ ] Any ACID database — partitions don't affect single-node writes
+- [ ] A CA system — you can have both if the partition is short-lived
+
+during a partition, CA is impossible; you must pick C or A. Choosing availability means accepting divergence, so you need a merge/conflict strategy for healing. "CA system" is a common trap — you can't opt out of partitions in a distributed system.
+</quiz>
+<quiz>
+An org has a 'frontend team,' 'backend team,' and 'DBA team.' What architecture will Conway's Law predict they produce?
+- [ ] Microservices aligned to business capabilities
+- [x] A three-tier monolith (UI layer, service layer, DB layer) — the system mirrors the communication structure of the org that built it
+- [ ] Event-driven architecture, because async boundaries form where teams don't talk
+- [ ] Whatever the architects design — org structure is irrelevant
+
+Conway's Law: systems mirror the communication paths of the organization. Layered teams produce layered architectures. This is why the **Inverse Conway Maneuver** — restructure teams to match the architecture you want — is a real architectural tool.
+</quiz>
+<quiz>
+Which signal most reliably tells you a 'microservice' boundary is wrong in production?
+- [ ] The service has more than 1,000 lines of code
+- [x] Two services must almost always be deployed together, and most requests cross their boundary synchronously
+- [ ] The service has its own repository and CI pipeline
+- [ ] The service exposes both REST and gRPC endpoints
+
+lockstep deployment and chatty synchronous coupling mean the boundary split a single cohesive capability in two. You got the operational cost of distribution without the independence benefit — the worst of both worlds. Boundaries should follow business capabilities / bounded contexts.
+</quiz>

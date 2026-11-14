@@ -8,11 +8,26 @@ repo_name: nitinkc/Microservices-Design-Architecture
 theme:
   name: material
   features:
+    # Navigation
     - navigation.tabs
-    - navigat ion.sections
+    - navigation.tabs.sticky
+    - navigation.sections
     - navigation.expand
-    - toc.integrate
+    - navigation.path
+    - navigation.top           # Back-to-top button
+    - navigation.footer        # Prev/Next page links
+    # navigation.instant disabled — breaks live reload (re-enable for production builds)
+    # - navigation.instant
+    # - navigation.instant.progress
+    # Search
+    - search.suggest
+    - search.highlight
+    - search.share
+    # Content
     - content.code.copy
+    - content.code.annotate    # (1) style code annotations
+    - content.tabs.link        # Sync tabs across page
+    - content.tooltips
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -28,6 +43,14 @@ theme:
       toggle:
         icon: material/weather-sunny
         name: Switch to light mode
+
+plugins:
+  - search
+  - mkdocs_quiz:
+      auto_submit: true
+      auto_number: true
+      show_correct: true
+      shuffle_answers: true
 
 markdown_extensions:
   - admonition
